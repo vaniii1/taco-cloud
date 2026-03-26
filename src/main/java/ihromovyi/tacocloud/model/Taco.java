@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -7,21 +8,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 @Data
-@Table(name = "Taco")
+@Entity
+@NoArgsConstructor
+@SQLDelete(sql = "UPDATE tacos SET is_deleted = true WHERE id = ?")
+@Table(name = "tacos")
 public class Taco {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private final String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
     @ManyToMany
-    @JoinTable(name="taco_ingredient",
-            joinColumns= @JoinColumn(name="taco", referencedColumnName="id"),
-            inverseJoinColumns= @JoinColumn(name="ingerient", referencedColumnName="id")
+    @JoinTable(name = "taco_ingredient",
+            joinColumns = @JoinColumn(name = "taco", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "ingerient", referencedColumnName = "id")
     )
-    private final List<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
 }

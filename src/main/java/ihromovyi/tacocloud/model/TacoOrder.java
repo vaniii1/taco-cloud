@@ -1,32 +1,37 @@
 package ihromovyi.tacocloud.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 @Data
-@Table(name = "taco_order")
+@Entity
+@NoArgsConstructor
+@SQLDelete(sql = "UPDATE taco_orders SET is_deleted = true WHERE id = ?")
+@Table(name = "taco_orders")
 public class TacoOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private final String deliveryName;
-    private final String deliveryStreet;
-    private final String deliveryCity;
-    private final String deliveryState;
-    private final String deliveryZip;
-    private final String ccNumber;
-    private final String ccExpiration;
-    private final String ccCVV;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String deliveryName;
+    private String deliveryStreet;
+    private String deliveryCity;
+    private String deliveryState;
+    private String deliveryZip;
+    private String ccNumber;
+    private String ccExpiration;
+    private String ccCvv;
     @OneToMany(cascade = CascadeType.ALL)
-    private final List<Taco> tacos = new ArrayList<>();
+    private List<Taco> tacos = new ArrayList<>();
 
     public void addTaco(Taco taco) {
         this.tacos.add(taco);
