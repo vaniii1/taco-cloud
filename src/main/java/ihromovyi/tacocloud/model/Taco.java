@@ -8,7 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.SQLDelete;
 @Table(name = "tacos")
 public class Taco {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @ManyToMany
@@ -28,5 +28,9 @@ public class Taco {
             joinColumns = @JoinColumn(name = "taco", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ingerient", referencedColumnName = "id")
     )
-    private List<Ingredient> ingredients;
+    private Set<Ingredient> ingredients;
+
+    public Taco(Long id) {
+        this.id = id;
+    }
 }

@@ -19,13 +19,22 @@ import org.hibernate.annotations.SQLDelete;
 @Table(name = "ingredients")
 public class Ingredient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
+
+    public Ingredient(String name, Type type) {
+        this.name = name;
+        this.type = type;
+    }
+
+    public Ingredient(Long id) {
+        this.id = id;
+    }
 
     public enum Type {
         WRAP,

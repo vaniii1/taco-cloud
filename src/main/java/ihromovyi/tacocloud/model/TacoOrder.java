@@ -20,7 +20,7 @@ import org.hibernate.annotations.SQLDelete;
 @Table(name = "taco_orders")
 public class TacoOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String deliveryName;
     private String deliveryStreet;
