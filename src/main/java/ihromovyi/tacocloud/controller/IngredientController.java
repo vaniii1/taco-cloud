@@ -2,10 +2,13 @@ package ihromovyi.tacocloud.controller;
 
 import ihromovyi.tacocloud.dto.ingredient.IngredientRequestDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
+import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
 import ihromovyi.tacocloud.service.ingredient.IngredientService;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,5 +40,18 @@ public class IngredientController {
     @GetMapping
     public Set<IngredientResponseDto> getIngredients() {
         return ingredientService.getAll();
+    }
+
+    @PatchMapping("/{id}")
+    public IngredientResponseDto updateIngredient(
+            @PathVariable Long id,
+            @RequestBody IngredientUpdateDto ingredient) {
+        return ingredientService.updateById(id, ingredient);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteIngredient(
+            @PathVariable Long id) {
+        ingredientService.deleteById(id);
     }
 }

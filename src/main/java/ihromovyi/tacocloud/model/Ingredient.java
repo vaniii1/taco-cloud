@@ -11,11 +11,13 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Data
 @Entity
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE ingredients SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @Table(name = "ingredients")
 public class Ingredient {
     @Id
@@ -23,9 +25,9 @@ public class Ingredient {
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private Type type = Type.UNKNOWN;
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
+    private Boolean isDeleted = false;
 
     public Ingredient(String name, Type type) {
         this.name = name;
@@ -37,6 +39,7 @@ public class Ingredient {
     }
 
     public enum Type {
+        UNKNOWN,
         WRAP,
         PROTEIN,
         VEGGIE,

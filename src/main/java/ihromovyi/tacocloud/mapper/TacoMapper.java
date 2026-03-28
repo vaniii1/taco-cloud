@@ -3,14 +3,17 @@ package ihromovyi.tacocloud.mapper;
 import ihromovyi.tacocloud.config.MapperConfig;
 import ihromovyi.tacocloud.dto.taco.TacoRequestDto;
 import ihromovyi.tacocloud.dto.taco.TacoResponseDto;
+import ihromovyi.tacocloud.dto.taco.TacoUpdateDto;
+import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.model.Taco;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(config = MapperConfig.class, uses = IngredientMapper.class)
+@Mapper(config = MapperConfig.class)
 public interface TacoMapper {
     @Mapping (target = "ingredientIds", source = "ingredients",
             qualifiedByName = "ingredientsToIds")
@@ -20,17 +23,24 @@ public interface TacoMapper {
             qualifiedByName = "idsToIngredients")
     Taco toEntity(TacoRequestDto dto);
 
-    @Named("idsToTacos")
-    default Set<Taco> idsToTacos(Set<Long> ids) {
+    @Mapping (target = "ingredients", source = "ingredientIds",
+            qualifiedByName = "idsToIngredients")
+    Taco update(@MappingTarget Taco taco, TacoUpdateDto dto);
+
+    @Named("idsToIngredients")
+    default Set<Ingredient> idsToIngredients(Set<Long> ids) {
+        if (ids == null) {
+            return null;
+        }
         return ids.stream()
-                .map(Taco::new)
+                .map(Ingredient::new)
                 .collect(Collectors.toSet());
     }
 
-    @Named("tacosToIds")
-    default Set<Long> tacosToIds(Set<Taco> tacos) {
-        return tacos.stream()
-                .map(Taco::getId)
+    @Named("ingredientsToIds")
+    default Set<Long> ingredientsToIds(Set<Ingredient> ingredients) {
+        return ingredients.stream()
+                .map(Ingredient::getId)
                 .collect(Collectors.toSet());
     }
 }

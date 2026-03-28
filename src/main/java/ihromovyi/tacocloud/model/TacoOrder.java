@@ -7,16 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Data
 @Entity
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE taco_orders SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @Table(name = "taco_orders")
 public class TacoOrder {
     @Id
@@ -31,7 +33,7 @@ public class TacoOrder {
     private String ccExpiration;
     private String ccCvv;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Taco> tacos = new ArrayList<>();
+    private Set<Taco> tacos = new HashSet<>();
 
     public void addTaco(Taco taco) {
         this.tacos.add(taco);
