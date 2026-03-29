@@ -27,7 +27,7 @@ public class Ingredient {
     @Enumerated(EnumType.STRING)
     private Type type = Type.UNKNOWN;
     @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
+    private Boolean isDeleted = Boolean.FALSE;
 
     public Ingredient(String name, Type type) {
         this.name = name;

@@ -5,8 +5,10 @@ import ihromovyi.tacocloud.dto.ingredient.IngredientRequestDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
 import ihromovyi.tacocloud.model.Ingredient;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(config = MapperConfig.class)
 public interface IngredientMapper {
@@ -14,6 +16,7 @@ public interface IngredientMapper {
 
     Ingredient toEntity(IngredientRequestDto ingredientRequestDto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Ingredient update(@MappingTarget Ingredient ingredient,
                       IngredientUpdateDto ingredientUpdateDto);
 }

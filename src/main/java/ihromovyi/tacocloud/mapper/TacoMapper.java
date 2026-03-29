@@ -8,10 +8,12 @@ import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.model.Taco;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(config = MapperConfig.class)
 public interface TacoMapper {
@@ -25,6 +27,7 @@ public interface TacoMapper {
 
     @Mapping (target = "ingredients", source = "ingredientIds",
             qualifiedByName = "idsToIngredients")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Taco update(@MappingTarget Taco taco, TacoUpdateDto dto);
 
     @Named("idsToIngredients")

@@ -1,11 +1,13 @@
 package ihromovyi.tacocloud.model;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,18 +26,28 @@ public class TacoOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "delivery_name")
     private String deliveryName;
+    @Column(name = "delivery_street")
     private String deliveryStreet;
+    @Column(name = "delivery_city")
     private String deliveryCity;
+    @Column(name = "delivery_state")
     private String deliveryState;
+    @Column(name = "delivery_zip")
     private String deliveryZip;
+    @Column(name = "cc_number")
     private String ccNumber;
+    @Column(name = "cc_expiration")
     private String ccExpiration;
+    @Column(name = "cc_cvv")
     private String ccCvv;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(name = "order_taco",
+            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id")
+    )
     private Set<Taco> tacos = new HashSet<>();
-
-    public void addTaco(Taco taco) {
-        this.tacos.add(taco);
-    }
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = Boolean.FALSE;
 }

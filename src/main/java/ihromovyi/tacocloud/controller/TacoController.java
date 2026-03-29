@@ -4,6 +4,7 @@ import ihromovyi.tacocloud.dto.taco.TacoRequestDto;
 import ihromovyi.tacocloud.dto.taco.TacoResponseDto;
 import ihromovyi.tacocloud.dto.taco.TacoUpdateDto;
 import ihromovyi.tacocloud.service.taco.TacoService;
+import jakarta.validation.Valid;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +23,8 @@ public class TacoController {
     private final TacoService tacoService;
 
     @PostMapping
-    public TacoResponseDto saveTaco(@RequestBody TacoRequestDto dto) {
+    public TacoResponseDto saveTaco(
+            @RequestBody @Valid TacoRequestDto dto) {
         return tacoService.save(dto);
     }
 
@@ -39,7 +41,7 @@ public class TacoController {
     @PatchMapping("/{id}")
     public TacoResponseDto updateTacoById(
             @PathVariable Long id,
-            @RequestBody TacoUpdateDto dto) {
+            @RequestBody @Valid TacoUpdateDto dto) {
         return tacoService.updateById(id, dto);
     }
 

@@ -3,7 +3,9 @@ package ihromovyi.tacocloud.controller;
 import ihromovyi.tacocloud.dto.ingredient.IngredientRequestDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
+import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.service.ingredient.IngredientService;
+import jakarta.validation.Valid;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,7 +30,7 @@ public class IngredientController {
 
     @PostMapping
     public IngredientResponseDto addIngredient(
-            @RequestBody IngredientRequestDto ingredient) {
+            @RequestBody @Valid IngredientRequestDto ingredient) {
         return ingredientService.save(ingredient);
     }
 
@@ -38,14 +41,17 @@ public class IngredientController {
     }
 
     @GetMapping
-    public Set<IngredientResponseDto> getIngredients() {
-        return ingredientService.getAll();
+    public Set<IngredientResponseDto> getIngredients(
+            @RequestParam(required = false) Ingredient.Type type) {
+        return (type != null)
+                ? ingredientService.getAllByType(type)
+                : ingredientService.getAll();
     }
 
     @PatchMapping("/{id}")
     public IngredientResponseDto updateIngredient(
             @PathVariable Long id,
-            @RequestBody IngredientUpdateDto ingredient) {
+            @RequestBody @Valid IngredientUpdateDto ingredient) {
         return ingredientService.updateById(id, ingredient);
     }
 

@@ -45,6 +45,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    public Set<IngredientResponseDto> getAllByType(Ingredient.Type type) {
+        return ingredientRepository.getAllByType(type)
+                .stream()
+                .map(ingredientMapper::toDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     @Transactional
     public IngredientResponseDto updateById(Long id, IngredientUpdateDto dto) {
         Optional<Ingredient> optionalIngredient = ingredientRepository.findById(id);

@@ -82,7 +82,7 @@ public class TacoServiceImpl implements TacoService {
                     .collect(Collectors.toSet());
             if (!missingIds.isEmpty()) {
                 throw new IngredientNotFoundException(
-                        "Ingredient not found with ids: " + missingIds);
+                        "Ingredients not found with ids: " + missingIds);
             }
         }
     }

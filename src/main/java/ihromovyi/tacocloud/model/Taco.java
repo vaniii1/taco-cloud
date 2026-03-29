@@ -29,12 +29,17 @@ public class Taco {
     private String name;
     @ManyToMany
     @JoinTable(name = "taco_ingredient",
-            joinColumns = @JoinColumn(name = "taco", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "ingerient", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
     private Set<Ingredient> ingredients = new HashSet<>();
     @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
+    private Boolean isDeleted = Boolean.FALSE;
+
+    public Taco(String name, Set<Ingredient> ingredients) {
+        this.name = name;
+        this.ingredients = ingredients;
+    }
 
     public Taco(Long id) {
         this.id = id;
