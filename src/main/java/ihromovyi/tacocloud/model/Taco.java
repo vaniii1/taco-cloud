@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
@@ -27,6 +28,8 @@ public class Taco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "created_at")
+    private Date createdAt = new Date();
     @ManyToMany
     @JoinTable(name = "taco_ingredient",
             joinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id"),

@@ -1,6 +1,7 @@
 package ihromovyi.tacocloud.dto.tacoorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.Set;
 
 public record TacoOrderResponseDto(
@@ -15,7 +16,8 @@ public record TacoOrderResponseDto(
         String deliveryState,
         @JsonProperty("delivery_zip")
         String deliveryZip,
+        @JsonProperty("placed_at")
+        Date placed_at,
         @JsonProperty("taco_ids")
-        Set<Long> tacoIds
-) {
+        Set<Long> tacoIds) {
 }

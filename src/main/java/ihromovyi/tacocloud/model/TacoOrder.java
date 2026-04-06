@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
@@ -36,6 +37,8 @@ public class TacoOrder {
     private String deliveryState;
     @Column(name = "delivery_zip")
     private String deliveryZip;
+    @Column(name = "placed_at")
+    private Date placedAt = new Date();
     @Column(name = "cc_number")
     private String ccNumber;
     @Column(name = "cc_expiration")
