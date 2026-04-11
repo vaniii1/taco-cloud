@@ -41,7 +41,7 @@ public class IngredientController {
     }
 
     @GetMapping
-    public Set<IngredientResponseDto> getIngredients(
+    public Set<IngredientResponseDto> getIngredientsByType(
             @RequestParam(required = false) Ingredient.Type type) {
         return (type != null)
                 ? ingredientService.getAllByType(type)

@@ -43,7 +43,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             TacoNotFoundException.class,
             TacoOrderNotFoundException.class,
             EntityNotFoundException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            UserAlreadyRegisteredException.class,
+            UserNotFoundException.class
     })
     public ResponseEntity<Object> handleRuntimeException(
             RuntimeException e
