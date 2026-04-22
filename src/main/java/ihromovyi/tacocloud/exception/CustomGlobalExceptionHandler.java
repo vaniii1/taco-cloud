@@ -1,6 +1,7 @@
 package ihromovyi.tacocloud.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,16 +28,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             HttpStatusCode status,
             WebRequest request
     ) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST);
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(this::getErrorMessage)
                 .toList();
-        body.put("errors", errors);
-        return new ResponseEntity<>(body, headers, status);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, errors);
     }
 
     @ExceptionHandler({
@@ -43,23 +41,39 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             TacoNotFoundException.class,
             TacoOrderNotFoundException.class,
             EntityNotFoundException.class,
-            IllegalArgumentException.class,
-            UserAlreadyRegisteredException.class,
             UserNotFoundException.class
     })
-    public ResponseEntity<Object> handleRuntimeException(
-            RuntimeException e
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+    public ResponseEntity<Object> handleNotFoundException(RuntimeException e) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            UserAlreadyRegisteredException.class,
+            ConstraintViolationException.class
+    })
+    public ResponseEntity<Object> handleBadRequestException(RuntimeException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler({
+            AuthorizationDeniedException.class
+    })
+    public ResponseEntity<Object> handleAuthorizationDeniedException(RuntimeException e) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, List.of(e.getMessage()));
+    }
+
+    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, List<String> errors) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        body.put("errors", errors);
+        return ResponseEntity.status(status).body(body);
     }
 
     private String getErrorMessage(ObjectError objectError) {
-        if (objectError instanceof FieldError) {
-            String field = ((FieldError) objectError).getField();
-            String message = objectError.getDefaultMessage();
-            return field + " " + message;
+        if (objectError instanceof FieldError fieldError) {
+            return fieldError.getField() + " " + fieldError.getDefaultMessage();
         }
         return objectError.getDefaultMessage();
     }

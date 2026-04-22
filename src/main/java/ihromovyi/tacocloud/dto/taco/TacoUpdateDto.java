@@ -5,6 +5,7 @@ import java.util.Set;
 
 public record TacoUpdateDto(
         String name,
+        @JsonProperty("ingredient_ids")
         Set<Long> ingredientIds,
         @JsonProperty("is_deleted")
         Boolean isDeleted) {

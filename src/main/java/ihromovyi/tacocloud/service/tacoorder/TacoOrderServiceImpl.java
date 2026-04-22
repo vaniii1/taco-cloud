@@ -8,8 +8,10 @@ import ihromovyi.tacocloud.exception.TacoOrderNotFoundException;
 import ihromovyi.tacocloud.mapper.TacoOrderMapper;
 import ihromovyi.tacocloud.model.Taco;
 import ihromovyi.tacocloud.model.TacoOrder;
+import ihromovyi.tacocloud.model.User;
 import ihromovyi.tacocloud.repository.TacoOrderRepository;
 import ihromovyi.tacocloud.repository.TacoRepository;
+import ihromovyi.tacocloud.service.user.UserService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,19 +19,24 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class TacoOrderServiceImpl implements TacoOrderService {
     private final TacoOrderRepository tacoOrderRepository;
     private final TacoOrderMapper tacoOrderMapper;
     private final TacoRepository tacoRepository;
+    private final UserService userService;
 
     @Override
+    @Transactional
     public TacoOrderResponseDto save(TacoOrderRequestDto dto) {
         verifyValidTacoIds(dto.tacoIds());
-        TacoOrder entity = tacoOrderMapper.toEntity(dto);
-        return tacoOrderMapper.toDto(tacoOrderRepository.save(entity));
+        TacoOrder tacoOrder = tacoOrderMapper.toEntity(dto);
+        tacoOrder.setUser(new User(userService.getCurrentUser().getId()));
+        return tacoOrderMapper.toDto(tacoOrderRepository.save(tacoOrder));
     }
 
     @Override

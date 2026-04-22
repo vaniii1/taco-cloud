@@ -17,7 +17,7 @@ public record TacoOrderResponseDto(
         @JsonProperty("delivery_zip")
         String deliveryZip,
         @JsonProperty("placed_at")
-        Date placed_at,
+        Date placedAt,
         @JsonProperty("taco_ids")
         Set<Long> tacoIds) {
 }

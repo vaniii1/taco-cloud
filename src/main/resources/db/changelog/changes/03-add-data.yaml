@@ -1,8 +1,53 @@
 databaseChangeLog:
   - changeSet:
-      id: init-02-data
+      id: init-03-data
       author: vani
       changes:
+        # ========================
+        # USERS
+        # ========================
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: first_name, value: "Bob" }
+              - column: { name: last_name, value: "User" }
+              - column: { name: email, value: "bob@mail" }
+              - column: { name: password,
+                          value: "$2b$10$iACDvN.BRmpoRGsqN5bL7OBWZKhgOvDcUXCAHHVWPoQzD/rJUTCSe"}
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: first_name, value: "Alice" }
+              - column: { name: last_name, value: "Admin" }
+              - column: { name: email, value: "alice.developer1@mail.com" }
+              - column: { name: password,
+                          value: "$2b$10$iACDvN.BRmpoRGsqN5bL7OBWZKhgOvDcUXCAHHVWPoQzD/rJUTCSe"}
+              - column: { name: is_deleted, valueBoolean: false }
+
+        # ========================
+        # USER_ROLE
+        # ========================
+        - insert:
+            tableName: user_role
+            columns:
+              - column: {name: user_id, valueNumeric: 1}
+              - column: {name: role_id, valueNumeric: 1}
+
+        - insert:
+            tableName: user_role
+            columns:
+              - column: {name: user_id, valueNumeric: 2}
+              - column: {name: role_id, valueNumeric: 1}
+
+        - insert:
+            tableName: user_role
+            columns:
+              - column: {name: user_id, valueNumeric: 2}
+              - column: {name: role_id, valueNumeric: 2}
 
         # ========================
         # INGREDIENTS
@@ -128,7 +173,6 @@ databaseChangeLog:
               - column: {name: name, value: "For Kids #3"}
               - column: {name: is_deleted, valueBoolean: false}
 
-
         # ========================
         # TACO_INGREDIENT
         # ========================
@@ -206,10 +250,10 @@ databaseChangeLog:
 
 
         # ========================
-        # TACO ORDERS
+        # ORDERS
         # ========================
         - insert:
-            tableName: taco_orders
+            tableName: orders
             columns:
               - column: {name: id, valueNumeric: 1}
               - column: {name: delivery_name, value: "John Doe"}
@@ -220,10 +264,12 @@ databaseChangeLog:
               - column: {name: cc_number, value: "4111111111111111"}
               - column: {name: cc_expiration, value: "12/2030"}
               - column: {name: cc_cvv, value: "123"}
+              - column: {name: user_id, valueNumeric: 1}
+              - column: {name: status, value: "DELIVERED"}
               - column: {name: is_deleted, valueBoolean: false}
 
         - insert:
-            tableName: taco_orders
+            tableName: orders
             columns:
               - column: {name: id, valueNumeric: 2}
               - column: {name: delivery_name, value: "Jane Smith"}
@@ -234,10 +280,12 @@ databaseChangeLog:
               - column: {name: cc_number, value: "5555555555554444"}
               - column: {name: cc_expiration, value: "11/2031"}
               - column: {name: cc_cvv, value: "456"}
+              - column: {name: user_id, valueNumeric: 1}
+              - column: {name: status, value: "ON_THE_WAY"}
               - column: {name: is_deleted, valueBoolean: false}
 
         - insert:
-            tableName: taco_orders
+            tableName: orders
             columns:
               - column: {name: id, valueNumeric: 3}
               - column: {name: delivery_name, value: "Alice Brown"}
@@ -248,8 +296,9 @@ databaseChangeLog:
               - column: {name: cc_number, value: "4007000000027"}
               - column: {name: cc_expiration, value: "10/2032"}
               - column: {name: cc_cvv, value: "789"}
+              - column: { name: user_id, valueNumeric: 2}
+              - column: { name: status, value: "CANCELED" }
               - column: {name: is_deleted, valueBoolean: false}
-
 
         # ========================
         # ORDER_TACO

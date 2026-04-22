@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: init-03-roles
+      id: init-02-roles
       author: vani
       changes:
         - insert:
@@ -14,5 +14,5 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column: {name: id, valueNumeric: 2}
-              - column: {name: role_name, value: "ADMIN"}
+              - column: {name: role_name, value: "DEVELOPER"}
               - column: {name: is_deleted, valueBoolean: false}

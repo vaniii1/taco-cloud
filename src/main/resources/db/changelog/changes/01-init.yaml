@@ -3,228 +3,6 @@ databaseChangeLog:
       id: init-01-tables
       author: vani
       changes:
-
-        # ========================
-        # INGREDIENTS TABLE
-        # ========================
-        - createTable:
-            tableName: ingredients
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: type
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: is_deleted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-                  constraints:
-                    nullable: false
-
-
-        # ========================
-        # TACOS TABLE
-        # ========================
-        - createTable:
-            tableName: tacos
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  defaultValueComputed: now()
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: is_deleted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-                  constraints:
-                    nullable: false
-
-
-        # ========================
-        # TACO_INGREDIENT (JOIN TABLE)
-        # ========================
-        - createTable:
-            tableName: taco_ingredient
-            columns:
-              - column:
-                  name: taco_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: ingredient_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-
-        - addPrimaryKey:
-            tableName: taco_ingredient
-            columnNames: taco_id, ingredient_id
-            constraintName: pk_taco_ingredient
-
-        - addForeignKeyConstraint:
-            baseTableName: taco_ingredient
-            baseColumnNames: taco_id
-            referencedTableName: tacos
-            referencedColumnNames: id
-            constraintName: fk_taco_ingredient_taco
-
-        - addForeignKeyConstraint:
-            baseTableName: taco_ingredient
-            baseColumnNames: ingredient_id
-            referencedTableName: ingredients
-            referencedColumnNames: id
-            constraintName: fk_taco_ingredient_ingredient
-
-
-        # ========================
-        # TACO_ORDERS TABLE
-        # ========================
-        - createTable:
-            tableName: taco_orders
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: delivery_name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: delivery_street
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: delivery_city
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: delivery_state
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: delivery_zip
-                  type: VARCHAR(20)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: placed_at
-                  type: TIMESTAMP
-                  defaultValueComputed: now()
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: cc_number
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: cc_expiration
-                  type: VARCHAR(10)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: cc_cvv
-                  type: VARCHAR(10)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: is_deleted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-                  constraints:
-                    nullable: false
-
-
-        # ========================
-        # ORDER_TACO (JOIN TABLE)
-        # ========================
-        - createTable:
-            tableName: order_taco
-            columns:
-              - column:
-                  name: order_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: taco_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-
-        - addPrimaryKey:
-            tableName: order_taco
-            columnNames: order_id, taco_id
-            constraintName: pk_order_taco
-
-        - addForeignKeyConstraint:
-            baseTableName: order_taco
-            baseColumnNames: order_id
-            referencedTableName: taco_orders
-            referencedColumnNames: id
-            constraintName: fk_order_taco_order
-
-        - addForeignKeyConstraint:
-            baseTableName: order_taco
-            baseColumnNames: taco_id
-            referencedTableName: tacos
-            referencedColumnNames: id
-            constraintName: fk_order_taco_taco
-
         # ========================
         # ROLES TABLE
         # ========================
@@ -251,7 +29,6 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-
 
         # ========================
         # USERS TABLE
@@ -355,3 +132,245 @@ databaseChangeLog:
             referencedTableName: roles
             referencedColumnNames: id
             constraintName: fk_user_role_role
+
+        # ========================
+        # INGREDIENTS TABLE
+        # ========================
+        - createTable:
+            tableName: ingredients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  defaultValue: "UNKNOWN"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        # ========================
+        # TACOS TABLE
+        # ========================
+        - createTable:
+            tableName: tacos
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        # ========================
+        # TACO_INGREDIENT (JOIN TABLE)
+        # ========================
+        - createTable:
+            tableName: taco_ingredient
+            columns:
+              - column:
+                  name: taco_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: ingredient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: taco_ingredient
+            columnNames: taco_id, ingredient_id
+            constraintName: pk_taco_ingredient
+
+        - addForeignKeyConstraint:
+            baseTableName: taco_ingredient
+            baseColumnNames: taco_id
+            referencedTableName: tacos
+            referencedColumnNames: id
+            constraintName: fk_taco_ingredient_taco
+
+        - addForeignKeyConstraint:
+            baseTableName: taco_ingredient
+            baseColumnNames: ingredient_id
+            referencedTableName: ingredients
+            referencedColumnNames: id
+            constraintName: fk_taco_ingredient_ingredient
+
+        # ========================
+        # ORDERS TABLE
+        # ========================
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: delivery_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: delivery_street
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: delivery_city
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: delivery_state
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: delivery_zip
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: placed_at
+                  type: TIMESTAMP
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: delivered_at
+                  type: TIMESTAMP
+
+              - column:
+                  name: cc_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: cc_expiration
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: cc_cvv
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: "PREPARING"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_taco_orders_user
+
+        # ========================
+        # ORDER_TACO (JOIN TABLE)
+        # ========================
+        - createTable:
+            tableName: order_taco
+            columns:
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: taco_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: order_taco
+            columnNames: order_id, taco_id
+            constraintName: pk_order_taco
+
+        - addForeignKeyConstraint:
+            baseTableName: order_taco
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_taco_order
+
+        - addForeignKeyConstraint:
+            baseTableName: order_taco
+            baseColumnNames: taco_id
+            referencedTableName: tacos
+            referencedColumnNames: id
+            constraintName: fk_order_taco_taco

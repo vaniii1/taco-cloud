@@ -53,6 +53,10 @@ public class User implements UserDetails {
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
+    public User(long id) {
+        this.id = id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

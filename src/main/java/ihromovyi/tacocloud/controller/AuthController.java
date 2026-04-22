@@ -1,7 +1,10 @@
 package ihromovyi.tacocloud.controller;
 
+import ihromovyi.tacocloud.dto.user.UserLoginRequestDto;
+import ihromovyi.tacocloud.dto.user.UserLoginResponseDto;
 import ihromovyi.tacocloud.dto.user.UserRegistrationRequestDto;
 import ihromovyi.tacocloud.dto.user.UserRegistrationResponseDto;
+import ihromovyi.tacocloud.security.AuthenticationService;
 import ihromovyi.tacocloud.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public UserRegistrationResponseDto createUser(
             @RequestBody @Valid UserRegistrationRequestDto user) {
         return userService.register(user);
+    }
+
+    @PostMapping("/login")
+    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto user) {
+        return authenticationService.authenticate(user);
     }
 }

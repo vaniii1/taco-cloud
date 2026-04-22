@@ -5,9 +5,9 @@ import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
 import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.service.ingredient.IngredientService;
-import jakarta.validation.Valid;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,8 +29,9 @@ public class IngredientController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('DEVELOPER')")
     public IngredientResponseDto addIngredient(
-            @RequestBody @Valid IngredientRequestDto ingredient) {
+            @RequestBody IngredientRequestDto ingredient) {
         return ingredientService.save(ingredient);
     }
 
@@ -49,13 +50,15 @@ public class IngredientController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('DEVELOPER')")
     public IngredientResponseDto updateIngredient(
             @PathVariable Long id,
-            @RequestBody @Valid IngredientUpdateDto ingredient) {
+            @RequestBody IngredientUpdateDto ingredient) {
         return ingredientService.updateById(id, ingredient);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('DEVELOPER')")
     public void deleteIngredient(
             @PathVariable Long id) {
         ingredientService.deleteById(id);
