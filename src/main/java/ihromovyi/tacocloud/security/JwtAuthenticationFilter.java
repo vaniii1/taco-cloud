@@ -21,17 +21,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.equals("/")
+                || path.equals("/home")
+                || path.startsWith("/auth/")
+                || path.startsWith("/pictures/");
+    }
+
+    @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        String path = request.getServletPath();
-        if (path.startsWith("/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String token = getToken(request);
         boolean isValid = jwtUtil.validateToken(token);
         if (token != null && isValid) {
