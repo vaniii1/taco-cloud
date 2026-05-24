@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.exception;
 
+import com.stripe.exception.StripeException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
@@ -41,7 +42,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             TacoNotFoundException.class,
             TacoOrderNotFoundException.class,
             EntityNotFoundException.class,
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            PaymentNotFoundException.class,
     })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, List.of(e.getMessage()));
@@ -50,7 +52,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler({
             IllegalArgumentException.class,
             UserAlreadyRegisteredException.class,
-            ConstraintViolationException.class
+            ConstraintViolationException.class,
+            StripeException.class
     })
     public ResponseEntity<Object> handleBadRequestException(RuntimeException e) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
