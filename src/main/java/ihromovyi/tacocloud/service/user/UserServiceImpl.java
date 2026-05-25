@@ -4,8 +4,10 @@ import ihromovyi.tacocloud.dto.user.UserRegistrationRequestDto;
 import ihromovyi.tacocloud.dto.user.UserRegistrationResponseDto;
 import ihromovyi.tacocloud.exception.UserAlreadyRegisteredException;
 import ihromovyi.tacocloud.mapper.UserMapper;
+import ihromovyi.tacocloud.model.Cart;
 import ihromovyi.tacocloud.model.Role;
 import ihromovyi.tacocloud.model.User;
+import ihromovyi.tacocloud.repository.CartRepository;
 import ihromovyi.tacocloud.repository.RoleRepository;
 import ihromovyi.tacocloud.repository.UserRepository;
 import java.util.HashSet;
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private static final Pattern ADMIN_PATTERN = Pattern.compile(".*developer([1-9][0-9]?)@.*");
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CartRepository cartRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -45,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
         user.setRoles(roles);
         userRepository.save(user);
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
         return userMapper.toDto(user);
     }
 

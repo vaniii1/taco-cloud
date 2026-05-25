@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyStripeClient {
+    private static final String CURRENCY_CODE = "usd";
 
     @Value("${stripe.apiKey}")
     private String stripeApiKey;
@@ -45,7 +46,6 @@ public class MyStripeClient {
     }
 
     public PaymentIntent createPaymentIntent(BigDecimal amount,
-                                             String currency,
                                              String customerStripeId
     ) throws StripeException {
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
@@ -53,7 +53,7 @@ public class MyStripeClient {
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()
                         .setAmount(amountInCents)
-                        .setCurrency(currency)
+                        .setCurrency(CURRENCY_CODE)
                         .setCustomer(customerStripeId)
                         .setAutomaticPaymentMethods(
                                 PaymentIntentCreateParams.AutomaticPaymentMethods.builder()

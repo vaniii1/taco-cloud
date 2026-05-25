@@ -7,6 +7,7 @@ import ihromovyi.tacocloud.exception.IngredientNotFoundException;
 import ihromovyi.tacocloud.mapper.IngredientMapper;
 import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.repository.IngredientRepository;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,14 +20,20 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @RequiredArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
+    private static final BigDecimal HALF_VALUE = new BigDecimal("0.5");
+    private static final BigDecimal ONE_VALUE = BigDecimal.ONE;
+    private static final BigDecimal ONE_AND_HALF_VALUE = new BigDecimal("1.5");
+    private static final BigDecimal TWO_VALUE = new BigDecimal("2");
+
     private final IngredientRepository ingredientRepository;
     private final IngredientMapper ingredientMapper;
 
     @Override
     public IngredientResponseDto save(IngredientRequestDto dto) {
-        Ingredient savedEntity =
-                ingredientRepository.save(ingredientMapper.toEntity(dto));
-        return ingredientMapper.toDto(savedEntity);
+        Ingredient ingredient = ingredientMapper.toEntity(dto);
+        assignPriceToIngredient(ingredient);
+        ingredientRepository.save(ingredient);
+        return ingredientMapper.toDto(ingredient);
     }
 
     @Override
@@ -61,6 +68,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (optionalIngredient.isPresent()) {
             Ingredient updatedIngredient =
                     ingredientMapper.update(optionalIngredient.get(), dto);
+            assignPriceToIngredient(updatedIngredient);
             ingredientRepository.save(updatedIngredient);
             return ingredientMapper.toDto(updatedIngredient);
         }
@@ -73,5 +81,14 @@ public class IngredientServiceImpl implements IngredientService {
                 .orElseThrow(() ->
                         new IngredientNotFoundException("Ingredient not found with id: " + id));
         ingredientRepository.delete(ingredient);
+    }
+
+    private void assignPriceToIngredient(Ingredient ingredient) {
+        switch (ingredient.getType()) {
+            case VEGGIE, SAUCE -> ingredient.setPrice(ONE_VALUE);
+            case CHEESE -> ingredient.setPrice(ONE_AND_HALF_VALUE);
+            case PROTEIN -> ingredient.setPrice(TWO_VALUE);
+            default -> ingredient.setPrice(HALF_VALUE);
+        }
     }
 }

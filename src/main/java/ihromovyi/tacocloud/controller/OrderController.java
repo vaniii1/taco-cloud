@@ -1,9 +1,9 @@
 package ihromovyi.tacocloud.controller;
 
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderRequestDto;
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderResponseDto;
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderUpdateDto;
-import ihromovyi.tacocloud.service.tacoorder.TacoOrderService;
+import ihromovyi.tacocloud.dto.order.TacoOrderRequestDto;
+import ihromovyi.tacocloud.dto.order.TacoOrderResponseDto;
+import ihromovyi.tacocloud.dto.order.TacoOrderUpdateDto;
+import ihromovyi.tacocloud.service.order.OrderService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,34 +18,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/order")
-public class TacoOrderController {
-    private final TacoOrderService tacoOrderService;
+public class OrderController {
+    private final OrderService orderService;
 
     @PostMapping
     public TacoOrderResponseDto saveTaco(
             @RequestBody TacoOrderRequestDto dto) {
-        return tacoOrderService.save(dto);
+        return orderService.save(dto);
     }
 
     @GetMapping("/{id}")
     public TacoOrderResponseDto getTacoById(@PathVariable Long id) {
-        return tacoOrderService.getById(id);
+        return orderService.getById(id);
     }
 
     @GetMapping
     public Set<TacoOrderResponseDto> getAllTacos() {
-        return tacoOrderService.getAll();
+        return orderService.getAll();
     }
 
     @PatchMapping("/{id}")
     public TacoOrderResponseDto updateTacoById(
             @PathVariable Long id,
             @RequestBody TacoOrderUpdateDto dto) {
-        return tacoOrderService.updateById(id, dto);
+        return orderService.updateById(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTacoById(@PathVariable Long id) {
-        tacoOrderService.deleteById(id);
+        orderService.deleteById(id);
     }
 }

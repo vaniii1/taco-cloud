@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,7 @@ public class Taco {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
     private Set<Ingredient> ingredients = new HashSet<>();
+    private BigDecimal price;
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 

@@ -1,15 +1,15 @@
-package ihromovyi.tacocloud.service.tacoorder;
+package ihromovyi.tacocloud.service.order;
 
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderRequestDto;
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderResponseDto;
-import ihromovyi.tacocloud.dto.tacoorder.TacoOrderUpdateDto;
+import ihromovyi.tacocloud.dto.order.TacoOrderRequestDto;
+import ihromovyi.tacocloud.dto.order.TacoOrderResponseDto;
+import ihromovyi.tacocloud.dto.order.TacoOrderUpdateDto;
 import ihromovyi.tacocloud.exception.TacoNotFoundException;
 import ihromovyi.tacocloud.exception.TacoOrderNotFoundException;
-import ihromovyi.tacocloud.mapper.TacoOrderMapper;
+import ihromovyi.tacocloud.mapper.OrderMapper;
+import ihromovyi.tacocloud.model.Order;
 import ihromovyi.tacocloud.model.Taco;
-import ihromovyi.tacocloud.model.TacoOrder;
 import ihromovyi.tacocloud.model.User;
-import ihromovyi.tacocloud.repository.TacoOrderRepository;
+import ihromovyi.tacocloud.repository.OrderRepository;
 import ihromovyi.tacocloud.repository.TacoRepository;
 import ihromovyi.tacocloud.service.user.UserService;
 import java.util.List;
@@ -24,26 +24,26 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class TacoOrderServiceImpl implements TacoOrderService {
-    private final TacoOrderRepository tacoOrderRepository;
-    private final TacoOrderMapper tacoOrderMapper;
+public class OrderServiceImpl implements OrderService {
+    private final OrderRepository tacoOrderRepository;
+    private final OrderMapper orderMapper;
     private final TacoRepository tacoRepository;
     private final UserService userService;
 
     @Override
     @Transactional
     public TacoOrderResponseDto save(TacoOrderRequestDto dto) {
-        verifyValidTacoIds(dto.tacoIds());
-        TacoOrder tacoOrder = tacoOrderMapper.toEntity(dto);
-        tacoOrder.setUser(new User(userService.getCurrentUser().getId()));
-        return tacoOrderMapper.toDto(tacoOrderRepository.save(tacoOrder));
+        verifyValidTacoIds(dto.itemIds());
+        Order order = orderMapper.toEntity(dto);
+        order.setUser(new User(userService.getCurrentUser().getId()));
+        return orderMapper.toDto(tacoOrderRepository.save(order));
     }
 
     @Override
     public TacoOrderResponseDto getById(Long id) {
-        Optional<TacoOrder> optionalTacoOrder = tacoOrderRepository.findById(id);
+        Optional<Order> optionalTacoOrder = tacoOrderRepository.findById(id);
         if (optionalTacoOrder.isPresent()) {
-            return tacoOrderMapper.toDto(optionalTacoOrder.get());
+            return orderMapper.toDto(optionalTacoOrder.get());
         }
         throw new TacoOrderNotFoundException("TacoOrder not found with id: " + id);
     }
@@ -52,19 +52,19 @@ public class TacoOrderServiceImpl implements TacoOrderService {
     public Set<TacoOrderResponseDto> getAll() {
         return tacoOrderRepository.findAll()
                 .stream()
-                .map(tacoOrderMapper::toDto)
+                .map(orderMapper::toDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
     @Transactional
     public TacoOrderResponseDto updateById(Long id, TacoOrderUpdateDto dto) {
-        Optional<TacoOrder> optionalTacoOrder = tacoOrderRepository.findById(id);
+        Optional<Order> optionalTacoOrder = tacoOrderRepository.findById(id);
         if (optionalTacoOrder.isPresent()) {
-            verifyValidTacoIds(dto.tacoIds());
-            TacoOrder updatedTaco = tacoOrderMapper.update(optionalTacoOrder.get(), dto);
+            verifyValidTacoIds(dto.itemIds());
+            Order updatedTaco = orderMapper.update(optionalTacoOrder.get(), dto);
             tacoOrderRepository.save(updatedTaco);
-            return tacoOrderMapper.toDto(updatedTaco);
+            return orderMapper.toDto(updatedTaco);
         }
         throw new TacoOrderNotFoundException("TacoOrder not found with id: " + id);
     }

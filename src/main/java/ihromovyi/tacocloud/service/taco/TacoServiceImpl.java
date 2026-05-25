@@ -10,6 +10,7 @@ import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.model.Taco;
 import ihromovyi.tacocloud.repository.IngredientRepository;
 import ihromovyi.tacocloud.repository.TacoRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,8 +31,9 @@ public class TacoServiceImpl implements TacoService {
     @Override
     public TacoResponseDto save(TacoRequestDto dto) {
         verifyValidIngredientIds(dto.ingredientIds());
-        Taco entity = tacoMapper.toEntity(dto);
-        return tacoMapper.toDto(tacoRepository.save(entity));
+        Taco taco = tacoMapper.toEntity(dto);
+        assignPriceToTaco(taco);
+        return tacoMapper.toDto(tacoRepository.save(taco));
     }
 
     @Override
@@ -58,6 +60,7 @@ public class TacoServiceImpl implements TacoService {
         if (optionalTaco.isPresent()) {
             verifyValidIngredientIds(dto.ingredientIds());
             Taco updatedTaco = tacoMapper.update(optionalTaco.get(), dto);
+            assignPriceToTaco(updatedTaco);
             tacoRepository.save(updatedTaco);
             return tacoMapper.toDto(updatedTaco);
         }
@@ -87,5 +90,13 @@ public class TacoServiceImpl implements TacoService {
                         "Ingredients not found with ids: " + missingIds);
             }
         }
+    }
+
+    private void assignPriceToTaco(Taco taco) {
+        BigDecimal price = BigDecimal.ZERO;
+        for (Ingredient ingredient : taco.getIngredients()) {
+            price = price.add(ingredient.getPrice());
+        }
+        taco.setPrice(price);
     }
 }

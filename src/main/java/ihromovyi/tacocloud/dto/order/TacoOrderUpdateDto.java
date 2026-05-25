@@ -1,11 +1,9 @@
-package ihromovyi.tacocloud.dto.tacoorder;
+package ihromovyi.tacocloud.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import java.util.Set;
 
-public record TacoOrderResponseDto(
-        Long id,
+public record TacoOrderUpdateDto(
         @JsonProperty("delivery_name")
         String deliveryName,
         @JsonProperty("delivery_street")
@@ -16,8 +14,8 @@ public record TacoOrderResponseDto(
         String deliveryState,
         @JsonProperty("delivery_zip")
         String deliveryZip,
-        @JsonProperty("placed_at")
-        Date placedAt,
-        @JsonProperty("taco_ids")
-        Set<Long> tacoIds) {
+        @JsonProperty("item_ids")
+        Set<Long> itemIds,
+        @JsonProperty("is_deleted")
+        Boolean isDeleted) {
 }

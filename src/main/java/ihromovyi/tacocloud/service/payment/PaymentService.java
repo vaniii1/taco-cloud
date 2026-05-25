@@ -5,7 +5,7 @@ import ihromovyi.tacocloud.model.Payment;
 import java.math.BigDecimal;
 
 public interface PaymentService {
-    Payment createPayment(BigDecimal amount, String currency, Long userId) throws StripeException;
+    Payment createPayment(BigDecimal amount, Long userId) throws StripeException;
 
     Payment declinePayment(Long paymentId) throws StripeException;
 

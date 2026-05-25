@@ -24,7 +24,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserRepository userRepository;
 
     @Override
-    public Payment createPayment(BigDecimal amount, String currency, Long userId)
+    public Payment createPayment(BigDecimal amount, Long userId)
             throws StripeException {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
@@ -33,11 +33,10 @@ public class PaymentServiceImpl implements PaymentService {
         User user = optionalUser.get();
         setCustomerIdToUser(user);
         PaymentIntent paymentIntent = stripeClient.createPaymentIntent(
-                amount, currency.toLowerCase(), user.getStripeCustomerId());
+                amount, user.getStripeCustomerId());
         Payment payment = new Payment();
         payment.setUser(new User(user.getId()));
         payment.setAmount(amount);
-        payment.setCurrency(paymentIntent.getCurrency());
         payment.setStripePaymentIntentId(paymentIntent.getId());
         payment.setStatus(Payment.Status.PENDING);
         payment.setCreatedAt(new Date());

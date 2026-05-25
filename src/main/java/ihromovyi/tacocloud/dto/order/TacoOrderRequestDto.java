@@ -1,4 +1,4 @@
-package ihromovyi.tacocloud.dto.tacoorder;
+package ihromovyi.tacocloud.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ihromovyi.tacocloud.validation.ValidExpiration;
@@ -37,6 +37,6 @@ public record TacoOrderRequestDto(
         @JsonProperty("cc_cvv")
         String ccCvv,
         @NotEmpty
-        @JsonProperty("taco_ids")
-        Set<Long> tacoIds) {
+        @JsonProperty("order_item_ids")
+        Set<Long> itemIds) {
 }

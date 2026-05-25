@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -26,6 +27,7 @@ public class Ingredient {
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type = Type.UNKNOWN;
+    private BigDecimal price = new BigDecimal("0.5");
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 

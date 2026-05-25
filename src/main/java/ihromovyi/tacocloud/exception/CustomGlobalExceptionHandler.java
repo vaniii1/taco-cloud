@@ -44,6 +44,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             EntityNotFoundException.class,
             UserNotFoundException.class,
             PaymentNotFoundException.class,
+            ItemNotFoundException.class,
     })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, List.of(e.getMessage()));
@@ -60,7 +61,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler({
-            AuthorizationDeniedException.class
+            AuthorizationDeniedException.class,
+            ForbiddenItemException.class
     })
     public ResponseEntity<Object> handleAuthorizationDeniedException(RuntimeException e) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, List.of(e.getMessage()));
