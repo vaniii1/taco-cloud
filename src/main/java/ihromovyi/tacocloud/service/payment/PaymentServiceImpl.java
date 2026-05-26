@@ -11,7 +11,7 @@ import ihromovyi.tacocloud.model.User;
 import ihromovyi.tacocloud.repository.PaymentRepository;
 import ihromovyi.tacocloud.repository.UserRepository;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setAmount(amount);
         payment.setStripePaymentIntentId(paymentIntent.getId());
         payment.setStatus(Payment.Status.PENDING);
-        payment.setCreatedAt(new Date());
+        payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
         return payment;
     }

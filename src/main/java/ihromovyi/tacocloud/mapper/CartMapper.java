@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
         uses = CartItemMapper.class)
 public interface CartMapper {
 
-    CartResponseDto toResponse(Cart cart);
+    CartResponseDto toDto(Cart cart);
 }

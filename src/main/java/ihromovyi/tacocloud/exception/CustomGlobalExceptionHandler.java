@@ -45,6 +45,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             UserNotFoundException.class,
             PaymentNotFoundException.class,
             ItemNotFoundException.class,
+            CartNotFoundException.class,
+            OrderNotFoundException.class,
     })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, List.of(e.getMessage()));

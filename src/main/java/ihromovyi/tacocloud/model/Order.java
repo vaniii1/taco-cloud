@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,9 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -20,7 +24,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Data
 @Entity
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE taco_orders SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE orders SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @Table(name = "orders")
 public class Order {
@@ -38,11 +42,11 @@ public class Order {
     @Column(name = "delivery_zip")
     private String deliveryZip;
     @Column(name = "placed_at")
-    private Date placedAt = new Date();
+    private LocalDateTime placedAt = LocalDateTime.now();
+    @Column(name = "delivered_at")
+    private LocalDateTime deliveredAt;
     @Column(name = "cc_number")
     private String ccNumber;
-    @Column(name = "delivered_at")
-    private Date deliveredAt;
     @Column(name = "cc_expiration")
     private String ccExpiration;
     @Column(name = "cc_cvv")
@@ -50,13 +54,12 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private Status status = Status.AWAITING_PAYMENT;
-    @Column(name = "price_total")
-    private BigDecimal priceTotal;
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
@@ -66,5 +69,10 @@ public class Order {
         PREPARING,
         ON_THE_WAY,
         CANCELED
+    }
+
+    public void addItem(OrderItem item) {
+        this.items.add(item);
+        item.setOrder(this);
     }
 }

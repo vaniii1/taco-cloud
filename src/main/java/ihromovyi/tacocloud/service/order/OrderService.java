@@ -1,19 +1,21 @@
 package ihromovyi.tacocloud.service.order;
 
-import ihromovyi.tacocloud.dto.order.TacoOrderRequestDto;
-import ihromovyi.tacocloud.dto.order.TacoOrderResponseDto;
-import ihromovyi.tacocloud.dto.order.TacoOrderUpdateDto;
+import ihromovyi.tacocloud.dto.order.OrderRequestDto;
+import ihromovyi.tacocloud.dto.order.OrderResponseDto;
+import ihromovyi.tacocloud.dto.order.OrderStatusDto;
 import jakarta.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 public interface OrderService {
-    TacoOrderResponseDto save(@Valid TacoOrderRequestDto dto);
+    OrderResponseDto createOrder(@Valid OrderRequestDto dto);
 
-    TacoOrderResponseDto getById(Long id);
+    OrderResponseDto getLastOrder();
 
-    Set<TacoOrderResponseDto> getAll();
+    List<OrderResponseDto> getAllByStatus(OrderStatusDto status);
 
-    TacoOrderResponseDto updateById(Long id, @Valid TacoOrderUpdateDto dto);
+    List<OrderResponseDto> getAll();
 
-    void deleteById(Long id);
+    List<OrderResponseDto> getAllOrdersByUserId(Long userId);
+
+    OrderResponseDto updateOrderStatusByOrderId(OrderStatusDto statusDto, Long orderId);
 }

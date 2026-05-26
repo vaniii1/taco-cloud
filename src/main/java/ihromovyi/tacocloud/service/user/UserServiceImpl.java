@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Pattern ADMIN_PATTERN = Pattern.compile(".*developer([1-9][0-9]?)@.*");
+    private static final Pattern DEVELOPER_PATTERN = Pattern.compile(".*developer([1-9][0-9]?)@.*");
+    private static final Pattern MANAGER_PATTERN = Pattern.compile(".*manager([1-9][0-9]?)@.*");
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CartRepository cartRepository;
@@ -37,11 +38,13 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         Set<Role> roles = new HashSet<>();
-        boolean isAdmin = ADMIN_PATTERN.matcher(user.getEmail()).matches();
+        boolean isDeveloper = DEVELOPER_PATTERN.matcher(user.getEmail()).matches();
+        boolean isManager = MANAGER_PATTERN.matcher(user.getEmail()).matches();
 
         for (Role role : roleRepository.findAll()) {
             if (role.getRole() == Role.RoleName.USER
-                    || (isAdmin && role.getRole() == Role.RoleName.DEVELOPER)) {
+                    || (isDeveloper && role.getRole() == Role.RoleName.DEVELOPER)
+                    || (isManager && role.getRole() == Role.RoleName.MANAGER)) {
                 roles.add(new Role(role.getId()));
             }
         }

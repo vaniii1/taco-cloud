@@ -3,10 +3,9 @@ package ihromovyi.tacocloud.service.cart;
 import ihromovyi.tacocloud.dto.cart.CartItemRequestDto;
 import ihromovyi.tacocloud.dto.cart.CartItemUpdateQuantityDto;
 import ihromovyi.tacocloud.dto.cart.CartResponseDto;
+import ihromovyi.tacocloud.exception.CartNotFoundException;
 import ihromovyi.tacocloud.exception.ForbiddenItemException;
-import ihromovyi.tacocloud.exception.ItemNotFoundException;
 import ihromovyi.tacocloud.exception.TacoNotFoundException;
-import ihromovyi.tacocloud.exception.UserNotFoundException;
 import ihromovyi.tacocloud.mapper.CartMapper;
 import ihromovyi.tacocloud.model.Cart;
 import ihromovyi.tacocloud.model.CartItem;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartServiceImpl implements CartService {
     private final UserService userService;
     private final CartRepository cartRepository;
-    private final CartItemRepository itemRepository;
+    private final CartItemRepository cartItemRepository;
     private final TacoRepository tacoRepository;
     private final CartMapper cartMapper;
 
@@ -34,7 +33,7 @@ public class CartServiceImpl implements CartService {
         Long currentUserId = userService.getCurrentUser().getId();
         Cart cart = getCartFromDbByUserId(currentUserId);
 
-        return cartMapper.toResponse(cart);
+        return cartMapper.toDto(cart);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class CartServiceImpl implements CartService {
     public CartResponseDto getCartByUserId(Long userId) {
         Cart cart = getCartFromDbByUserId(userId);
 
-        return cartMapper.toResponse(cart);
+        return cartMapper.toDto(cart);
     }
 
     @Override
@@ -53,13 +52,9 @@ public class CartServiceImpl implements CartService {
 
         Taco taco = getTacoFromDbById(requestDto.tacoId());
 
-        CartItem item = new CartItem();
-        item.setTaco(taco);
-        item.setQuantity(requestDto.quantity());
-
         cart.addItem(taco, requestDto.quantity());
 
-        return cartMapper.toResponse(cart);
+        return cartMapper.toDto(cart);
     }
 
     @Override
@@ -70,19 +65,19 @@ public class CartServiceImpl implements CartService {
     ) {
         Long currentUserId = userService.getCurrentUser().getId();
 
-        CartItem item = itemRepository
+        CartItem cartItem = cartItemRepository
                 .findByIdAndCartUserId(itemId, currentUserId)
                 .orElseThrow(
                         () -> new ForbiddenItemException(
                                 "You are not allowed to update item quantity of other users."));
 
         if (requestDto.quantity() == 0) {
-            item.getCart().removeItem(item);
+            cartItem.getCart().removeItem(cartItem);
         } else {
-            item.setQuantity(requestDto.quantity());
+            cartItem.setQuantity(requestDto.quantity());
         }
 
-        return cartMapper.toResponse(item.getCart());
+        return cartMapper.toDto(cartItem.getCart());
     }
 
     @Override
@@ -91,30 +86,24 @@ public class CartServiceImpl implements CartService {
 
         Long userId = userService.getCurrentUser().getId();
 
-        CartItem item = itemRepository
+        CartItem cartItem = cartItemRepository
                 .findByIdAndCartUserId(itemId, userId)
                 .orElseThrow(
                         () -> new ForbiddenItemException(
                                 "You are not allowed to remove item from other carts."));
 
-        item.getCart().removeItem(item);
+        cartItem.getCart().removeItem(cartItem);
 
-        return cartMapper.toResponse(item.getCart());
+        return cartMapper.toDto(cartItem.getCart());
     }
 
     private Cart getCartFromDbByUserId(Long userId) {
         return cartRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundException("Cart not found with userId: " + userId));
+                () -> new CartNotFoundException("Cart not found with userId: " + userId));
     }
 
     private Taco getTacoFromDbById(Long tacoId) {
         return tacoRepository.findById(tacoId).orElseThrow(
                 () -> new TacoNotFoundException("Taco not found with id: " + tacoId));
     }
-
-    private CartItem getItemFromDbById(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(
-                () -> new ItemNotFoundException("Item not found with id: " + itemId));
-    }
-
 }

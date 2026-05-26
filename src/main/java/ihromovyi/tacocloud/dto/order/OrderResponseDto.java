@@ -1,9 +1,12 @@
 package ihromovyi.tacocloud.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
-public record TacoOrderUpdateDto(
+public record OrderResponseDto(
+        Long id,
         @JsonProperty("delivery_name")
         String deliveryName,
         @JsonProperty("delivery_street")
@@ -14,8 +17,12 @@ public record TacoOrderUpdateDto(
         String deliveryState,
         @JsonProperty("delivery_zip")
         String deliveryZip,
-        @JsonProperty("item_ids")
-        Set<Long> itemIds,
-        @JsonProperty("is_deleted")
-        Boolean isDeleted) {
+        @JsonProperty("placed_at")
+        LocalDateTime placedAt,
+        @JsonProperty("delivered_at")
+        LocalDateTime deliveryAt,
+        @JsonProperty("items")
+        Set<OrderItemResponseDto> items,
+        @JsonProperty("total_price")
+        BigDecimal totalPrice) {
 }

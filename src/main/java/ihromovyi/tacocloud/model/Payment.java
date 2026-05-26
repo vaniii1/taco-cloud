@@ -11,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -34,7 +34,9 @@ public class Payment {
     private String stripePaymentIntentId;
     private BigDecimal amount;
     @Column(name = "created_at")
-    private Date createdAt = new Date();
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "last_modified_at")
+    private LocalDateTime lastModifiedAt;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Column(name = "is_deleted")

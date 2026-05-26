@@ -40,24 +40,24 @@ public class Cart {
     private Boolean isDeleted = Boolean.FALSE;
 
     public void addItem(Taco taco, int quantity) {
-        for (CartItem item : items) {
-            if (item.getTaco().getId().equals(taco.getId())) {
-                item.setQuantity(item.getQuantity() + quantity);
+        for (CartItem cartItem : items) {
+            if (cartItem.getTaco().getId().equals(taco.getId())) {
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
                 return;
             }
         }
 
-        CartItem newItem = new CartItem();
-        newItem.setTaco(taco);
-        newItem.setQuantity(quantity);
-        newItem.setCart(this);
+        CartItem newCartItem = new CartItem();
+        newCartItem.setTaco(taco);
+        newCartItem.setQuantity(quantity);
+        newCartItem.setCart(this);
 
-        items.add(newItem);
+        items.add(newCartItem);
     }
 
-    public void removeItem(CartItem item) {
-        items.remove(item);
-        item.setCart(null);
+    public void removeItem(CartItem cartItem) {
+        items.remove(cartItem);
+        cartItem.setCart(null);
     }
 
     public BigDecimal getTotalPrice() {

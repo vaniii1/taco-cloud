@@ -17,24 +17,20 @@ import org.hibernate.annotations.SQLRestriction;
 @Data
 @Entity
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE order_items SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
-@Table(name = "cart_items")
-public class CartItem {
+@Table(name = "order_items")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     private Taco taco;
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @JoinColumn(name = "order_id")
+    private Order order;
     private int quantity;
+    private BigDecimal subtotal;
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
-
-    public BigDecimal getSubtotal() {
-        return taco.getPrice()
-                .multiply(BigDecimal.valueOf(quantity));
-    }
 }

@@ -3,12 +3,10 @@ package ihromovyi.tacocloud.dto.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ihromovyi.tacocloud.validation.ValidExpiration;
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.Set;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-public record TacoOrderRequestDto(
+public record OrderRequestDto(
         @NotNull
         @JsonProperty("delivery_name")
         String deliveryName,
@@ -35,8 +33,5 @@ public record TacoOrderRequestDto(
         @NotNull
         @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
         @JsonProperty("cc_cvv")
-        String ccCvv,
-        @NotEmpty
-        @JsonProperty("order_item_ids")
-        Set<Long> itemIds) {
+        String ccCvv) {
 }
