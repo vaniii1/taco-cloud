@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.controller;
 
+import com.stripe.exception.StripeException;
 import ihromovyi.tacocloud.dto.user.UserLoginRequestDto;
 import ihromovyi.tacocloud.dto.user.UserLoginResponseDto;
 import ihromovyi.tacocloud.dto.user.UserRegistrationRequestDto;
@@ -22,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserRegistrationResponseDto createUser(
-            @RequestBody @Valid UserRegistrationRequestDto user) {
+            @RequestBody @Valid UserRegistrationRequestDto user) throws StripeException {
         return userService.register(user);
     }
 

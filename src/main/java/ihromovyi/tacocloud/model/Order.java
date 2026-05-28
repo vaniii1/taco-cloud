@@ -58,6 +58,8 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private Status status = Status.AWAITING_PAYMENT;
+    @Column(name = "status_changed_at")
+    private LocalDateTime statusChangedAt = LocalDateTime.now();
     @Column(name = "total_price")
     private BigDecimal totalPrice;
     @Column(name = "is_deleted")

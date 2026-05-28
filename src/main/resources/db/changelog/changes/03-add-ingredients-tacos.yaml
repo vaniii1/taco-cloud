@@ -1,0 +1,228 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: add-ingredients-tacos
+      author: vani
+
+      changes:
+
+        # ========================
+        # INGREDIENTS
+        # ========================
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: name, value: "Flour Tortilla" }
+              - column: { name: type, value: "WRAP" }
+              - column: { name: price, valueNumeric: 0.50 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: name, value: "Corn Tortilla" }
+              - column: { name: type, value: "WRAP" }
+              - column: { name: price, valueNumeric: 0.50 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 3 }
+              - column: { name: name, value: "Ground Beef" }
+              - column: { name: type, value: "PROTEIN" }
+              - column: { name: price, valueNumeric: 2.00 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 4 }
+              - column: { name: name, value: "Carnitas" }
+              - column: { name: type, value: "PROTEIN" }
+              - column: { name: price, valueNumeric: 2.20 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 5 }
+              - column: { name: name, value: "Bacon" }
+              - column: { name: type, value: "PROTEIN" }
+              - column: { name: price, valueNumeric: 2.50 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 6 }
+              - column: { name: name, value: "Jalapenos" }
+              - column: { name: type, value: "VEGGIE" }
+              - column: { name: price, valueNumeric: 0.30 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 7 }
+              - column: { name: name, value: "Tomatoes" }
+              - column: { name: type, value: "VEGGIE" }
+              - column: { name: price, valueNumeric: 0.40 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 8 }
+              - column: { name: name, value: "Lettuce" }
+              - column: { name: type, value: "VEGGIE" }
+              - column: { name: price, valueNumeric: 0.35 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 9 }
+              - column: { name: name, value: "Cheddar" }
+              - column: { name: type, value: "CHEESE" }
+              - column: { name: price, valueNumeric: 0.80 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 10 }
+              - column: { name: name, value: "Mozzarella" }
+              - column: { name: type, value: "CHEESE" }
+              - column: { name: price, valueNumeric: 0.85 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 11 }
+              - column: { name: name, value: "Salsa" }
+              - column: { name: type, value: "SAUCE" }
+              - column: { name: price, valueNumeric: 0.25 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: ingredients
+            columns:
+              - column: { name: id, valueNumeric: 12 }
+              - column: { name: name, value: "Sour Cream" }
+              - column: { name: type, value: "SAUCE" }
+              - column: { name: price, valueNumeric: 0.30 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+
+        # ========================
+        # TACOS
+        # ========================
+        - insert:
+            tableName: tacos
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: name, value: "Classic Beef Taco" }
+              - column: { name: price, valueNumeric: 5.50 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: tacos
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: name, value: "Spicy Carnitas Taco" }
+              - column: { name: price, valueNumeric: 6.20 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+        - insert:
+            tableName: tacos
+            columns:
+              - column: { name: id, valueNumeric: 3 }
+              - column: { name: name, value: "Kids Mini Taco" }
+              - column: { name: price, valueNumeric: 4.00 }
+              - column: { name: is_deleted, valueBoolean: false }
+
+
+        # ========================
+        # TACO_INGREDIENT
+        # ========================
+
+        # Taco 1 - Classic Beef
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 1 }
+              - column: { name: ingredient_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 1 }
+              - column: { name: ingredient_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 1 }
+              - column: { name: ingredient_id, valueNumeric: 7 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 1 }
+              - column: { name: ingredient_id, valueNumeric: 11 }
+
+
+        # Taco 2 - Spicy Carnitas
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 2 }
+              - column: { name: ingredient_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 2 }
+              - column: { name: ingredient_id, valueNumeric: 4 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 2 }
+              - column: { name: ingredient_id, valueNumeric: 6 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 2 }
+              - column: { name: ingredient_id, valueNumeric: 9 }
+
+
+        # Taco 3 - Kids Taco
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 3 }
+              - column: { name: ingredient_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 3 }
+              - column: { name: ingredient_id, valueNumeric: 8 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 3 }
+              - column: { name: ingredient_id, valueNumeric: 10 }
+
+        - insert:
+            tableName: taco_ingredient
+            columns:
+              - column: { name: taco_id, valueNumeric: 3 }
+              - column: { name: ingredient_id, valueNumeric: 12 }

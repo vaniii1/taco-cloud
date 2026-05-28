@@ -25,6 +25,7 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "taco_id")
     private Taco taco;
     @ManyToOne
     @JoinColumn(name = "cart_id")

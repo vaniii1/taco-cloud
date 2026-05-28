@@ -5,7 +5,7 @@ import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
 import ihromovyi.tacocloud.model.Ingredient;
 import jakarta.validation.Valid;
-import java.util.Set;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,9 +14,9 @@ public interface IngredientService {
 
     IngredientResponseDto getById(Long id);
 
-    Set<IngredientResponseDto> getAll();
+    List<IngredientResponseDto> getAll();
 
-    Set<IngredientResponseDto> getAllByType(Ingredient.Type type);
+    List<IngredientResponseDto> getAllByType(Ingredient.Type type);
 
     IngredientResponseDto updateById(Long id, @Valid IngredientUpdateDto ingredient);
 

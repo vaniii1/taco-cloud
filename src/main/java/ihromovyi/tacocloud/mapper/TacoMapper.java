@@ -6,8 +6,7 @@ import ihromovyi.tacocloud.dto.taco.TacoResponseDto;
 import ihromovyi.tacocloud.dto.taco.TacoUpdateDto;
 import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.model.Taco;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,19 +30,19 @@ public interface TacoMapper {
     Taco update(@MappingTarget Taco taco, TacoUpdateDto dto);
 
     @Named("idsToIngredients")
-    default Set<Ingredient> idsToIngredients(Set<Long> ids) {
+    default List<Ingredient> idsToIngredients(List<Long> ids) {
         if (ids == null) {
             return null;
         }
         return ids.stream()
                 .map(Ingredient::new)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Named("ingredientsToIds")
-    default Set<Long> ingredientsToIds(Set<Ingredient> ingredients) {
+    default List<Long> ingredientsToIds(List<Ingredient> ingredients) {
         return ingredients.stream()
                 .map(Ingredient::getId)
-                .collect(Collectors.toSet());
+                .toList();
     }
 }

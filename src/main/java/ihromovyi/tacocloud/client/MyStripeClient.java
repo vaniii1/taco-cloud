@@ -24,15 +24,13 @@ public class MyStripeClient {
         client = new StripeClient(stripeApiKey);
     }
 
-    public Customer createCustomer(Long id,
-                                   String firstName,
+    public Customer createCustomer(String firstName,
                                    String lastName,
                                    String email,
                                    String country,
                                    String city
     ) throws StripeException {
         CustomerCreateParams params = CustomerCreateParams.builder()
-                .putExtraParam("internal_user_id", String.valueOf(id))
                 .setName(firstName + " " + lastName)
                 .setEmail(email)
                 .setAddress(
@@ -64,11 +62,11 @@ public class MyStripeClient {
         return client.v1().paymentIntents().create(params);
     }
 
-    public PaymentIntent cancelPaymentIntent(String stripePaymentIntentId) throws StripeException {
-        return client.v1().paymentIntents().cancel(stripePaymentIntentId);
+    public void cancelPaymentIntent(String stripePaymentIntentId) throws StripeException {
+        client.v1().paymentIntents().cancel(stripePaymentIntentId);
     }
 
-    public PaymentIntent confirmPaymentIntent(String stripePaymentIntentId) throws StripeException {
-        return client.v1().paymentIntents().confirm(stripePaymentIntentId);
+    public void confirmPaymentIntent(String stripePaymentIntentId) throws StripeException {
+        client.v1().paymentIntents().confirm(stripePaymentIntentId);
     }
 }

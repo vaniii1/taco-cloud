@@ -19,6 +19,7 @@ import ihromovyi.tacocloud.model.User;
 import ihromovyi.tacocloud.repository.CartRepository;
 import ihromovyi.tacocloud.repository.OrderRepository;
 import ihromovyi.tacocloud.service.user.UserService;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
 
         }
         order.setStatus(statusDto.status());
+        order.setStatusChangedAt(LocalDateTime.now());
         return orderMapper.toDto(order);
     }
 

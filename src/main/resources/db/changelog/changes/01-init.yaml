@@ -2,9 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: init-01-tables
       author: vani
+
       changes:
+
         # ========================
-        # ROLES TABLE
+        # ROLES
         # ========================
         - createTable:
             tableName: roles
@@ -16,13 +18,11 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: role_name
                   type: VARCHAR(50)
                   constraints:
                     nullable: false
-
               - column:
                   name: is_deleted
                   type: BOOLEAN
@@ -31,7 +31,7 @@ databaseChangeLog:
                     nullable: false
 
         # ========================
-        # USERS TABLE
+        # USERS
         # ========================
         - createTable:
             tableName: users
@@ -43,56 +43,45 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: stripe_customer_id
                   type: VARCHAR(255)
-
               - column:
                   name: first_name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: last_name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: country
                   type: VARCHAR(255)
-
               - column:
                   name: city
                   type: VARCHAR(255)
-
               - column:
                   name: zip_code
                   type: VARCHAR(20)
-
               - column:
                   name: street
                   type: VARCHAR(255)
-
               - column:
                   name: email
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
                     unique: true
-
               - column:
                   name: phone_number
                   type: VARCHAR(50)
-
               - column:
                   name: password
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: is_deleted
                   type: BOOLEAN
@@ -101,7 +90,7 @@ databaseChangeLog:
                     nullable: false
 
         # ========================
-        # USER_ROLE (JOIN TABLE)
+        # USER_ROLE
         # ========================
         - createTable:
             tableName: user_role
@@ -111,7 +100,6 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-
               - column:
                   name: role_id
                   type: BIGINT
@@ -138,7 +126,7 @@ databaseChangeLog:
             constraintName: fk_user_role_role
 
         # ========================
-        # INGREDIENTS TABLE
+        # INGREDIENTS
         # ========================
         - createTable:
             tableName: ingredients
@@ -150,20 +138,23 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: type
                   type: VARCHAR(50)
                   defaultValue: "UNKNOWN"
                   constraints:
                     nullable: false
-
+              - column:
+                  name: price
+                  type: DECIMAL(19,2)
+                  defaultValueNumeric: 0.5
+                  constraints:
+                    nullable: false
               - column:
                   name: is_deleted
                   type: BOOLEAN
@@ -172,7 +163,7 @@ databaseChangeLog:
                     nullable: false
 
         # ========================
-        # TACOS TABLE
+        # TACOS
         # ========================
         - createTable:
             tableName: tacos
@@ -184,20 +175,20 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: now()
                   constraints:
                     nullable: false
-
+              - column:
+                  name: price
+                  type: DECIMAL(19,2)
               - column:
                   name: is_deleted
                   type: BOOLEAN
@@ -206,7 +197,7 @@ databaseChangeLog:
                     nullable: false
 
         # ========================
-        # TACO_INGREDIENT (JOIN TABLE)
+        # TACO_INGREDIENT
         # ========================
         - createTable:
             tableName: taco_ingredient
@@ -216,7 +207,6 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-
               - column:
                   name: ingredient_id
                   type: BIGINT
@@ -243,10 +233,92 @@ databaseChangeLog:
             constraintName: fk_taco_ingredient_ingredient
 
         # ========================
-        # PAYMENTS TABLE
+        # CARTS
         # ========================
         - createTable:
-            tableName: payments
+            tableName: carts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: carts
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_cart_user
+
+        # ========================
+        # CART ITEMS
+        # ========================
+        - createTable:
+            tableName: cart_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cart_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: taco_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: cart_items
+            baseColumnNames: cart_id
+            referencedTableName: carts
+            referencedColumnNames: id
+            constraintName: fk_cart_items_cart
+
+        - addForeignKeyConstraint:
+            baseTableName: cart_items
+            baseColumnNames: taco_id
+            referencedTableName: tacos
+            referencedColumnNames: id
+            constraintName: fk_cart_items_taco
+
+        # ========================
+        # ORDERS
+        # ========================
+        - createTable:
+            tableName: orders
             columns:
               - column:
                   name: id
@@ -263,35 +335,152 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: stripe_payment_intent_id
+                  name: delivery_name
                   type: VARCHAR(255)
+              - column:
+                  name: delivery_street
+                  type: VARCHAR(255)
+              - column:
+                  name: delivery_city
+                  type: VARCHAR(255)
+              - column:
+                  name: delivery_state
+                  type: VARCHAR(255)
+              - column:
+                  name: delivery_zip
+                  type: VARCHAR(50)
 
               - column:
-                  name: amount
-                  type: DECIMAL(19, 2)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: created_at
+                  name: placed_at
                   type: TIMESTAMP
                   defaultValueComputed: now()
-                  constraints:
-                    nullable: false
+
+              - column:
+                  name: delivered_at
+                  type: TIMESTAMP
 
               - column:
                   name: status
                   type: VARCHAR(50)
-                  defaultValue: "PENDING"
-                  constraints:
-                    nullable: false
+                  defaultValue: "AWAITING_PAYMENT"
+
+              - column:
+                  name: status_changed_at
+                  type: TIMESTAMP
+
+              - column:
+                  name: total_price
+                  type: DECIMAL(19,2)
 
               - column:
                   name: is_deleted
                   type: BOOLEAN
                   defaultValueBoolean: false
+
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_orders_user
+
+        # ========================
+        # ORDER ITEMS
+        # ========================
+        - createTable:
+            tableName: order_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: order_id
+                  type: BIGINT
                   constraints:
                     nullable: false
+              - column:
+                  name: taco_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subtotal
+                  type: DECIMAL(19,2)
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+
+        - addForeignKeyConstraint:
+            baseTableName: order_items
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_items_order
+
+        - addForeignKeyConstraint:
+            baseTableName: order_items
+            baseColumnNames: taco_id
+            referencedTableName: tacos
+            referencedColumnNames: id
+            constraintName: fk_order_items_taco
+
+        # ========================
+        # PAYMENTS
+        # ========================
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stripe_customer_id
+                  type: VARCHAR(255)
+              - column:
+                  name: stripe_payment_intent_id
+                  type: VARCHAR(255)
+              - column:
+                  name: amount
+                  type: DECIMAL(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: now()
+              - column:
+                  name: last_modified_at
+                  type: TIMESTAMP
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: "PENDING"
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
 
         - addForeignKeyConstraint:
             baseTableName: payments
@@ -299,3 +488,10 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_payments_user
+
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_payments_order

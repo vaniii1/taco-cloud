@@ -2,7 +2,7 @@ package ihromovyi.tacocloud.dto.taco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 public record TacoResponseDto(
         Long id,
@@ -10,5 +10,5 @@ public record TacoResponseDto(
         @JsonProperty("created_at")
         Date createdAt,
         @JsonProperty("ingredient_ids")
-        Set<Long> ingredientIds) {
+        List<Long> ingredientIds) {
 }

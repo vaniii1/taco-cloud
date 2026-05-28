@@ -75,16 +75,16 @@ public class TacoServiceImpl implements TacoService {
         tacoRepository.deleteById(id);
     }
 
-    private void verifyValidIngredientIds(Set<Long> ids) {
+    private void verifyValidIngredientIds(List<Long> ids) {
         if (ids != null) {
             List<Ingredient> foundIngredients = ingredientRepository
                     .findAllById(ids);
-            Set<Long> foundIds = foundIngredients.stream()
+            List<Long> foundIds = foundIngredients.stream()
                     .map(Ingredient::getId)
-                    .collect(Collectors.toSet());
-            Set<Long> missingIds = ids.stream()
+                    .toList();
+            List<Long> missingIds = ids.stream()
                     .filter(id -> !foundIds.contains(id))
-                    .collect(Collectors.toSet());
+                    .toList();
             if (!missingIds.isEmpty()) {
                 throw new IngredientNotFoundException(
                         "Ingredients not found with ids: " + missingIds);

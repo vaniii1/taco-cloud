@@ -10,9 +10,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -36,12 +36,12 @@ public class Taco {
             joinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
-    private Set<Ingredient> ingredients = new HashSet<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
     private BigDecimal price;
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
-    public Taco(String name, Set<Ingredient> ingredients) {
+    public Taco(String name, List<Ingredient> ingredients) {
         this.name = name;
         this.ingredients = ingredients;
     }

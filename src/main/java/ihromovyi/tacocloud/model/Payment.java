@@ -30,15 +30,20 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
+    @Column(name = "stripe_customer_id")
+    private String stripeCustomerId;
     @Column(name = "stripe_payment_intent_id")
     private String stripePaymentIntentId;
     private BigDecimal amount;
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "last_modified_at")
-    private LocalDateTime lastModifiedAt;
+    private LocalDateTime lastModifiedAt = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.PENDING;
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
@@ -46,5 +51,14 @@ public class Payment {
         PENDING,
         CONFIRMED,
         DECLINED
+    }
+
+    public Payment(User user, Order order, String stripeCustomerId,
+                   String stripePaymentIntentId, BigDecimal amount) {
+        this.user = user;
+        this.order = order;
+        this.stripeCustomerId = stripeCustomerId;
+        this.stripePaymentIntentId = stripePaymentIntentId;
+        this.amount = amount;
     }
 }

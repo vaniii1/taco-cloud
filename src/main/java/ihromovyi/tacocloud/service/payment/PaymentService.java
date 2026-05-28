@@ -1,13 +1,12 @@
 package ihromovyi.tacocloud.service.payment;
 
 import com.stripe.exception.StripeException;
-import ihromovyi.tacocloud.model.Payment;
-import java.math.BigDecimal;
+import ihromovyi.tacocloud.dto.payment.PaymentResponseDto;
 
 public interface PaymentService {
-    Payment createPayment(BigDecimal amount, Long userId) throws StripeException;
+    PaymentResponseDto createPaymentForLatestOrder() throws StripeException;
 
-    Payment declinePayment(Long paymentId) throws StripeException;
+    PaymentResponseDto declinePayment(Long paymentId) throws StripeException;
 
-    Payment confirmPayment(Long paymentId) throws StripeException;
+    PaymentResponseDto confirmPayment(Long paymentId) throws StripeException;
 }

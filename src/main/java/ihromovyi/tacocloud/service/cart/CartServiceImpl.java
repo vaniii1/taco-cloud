@@ -28,7 +28,7 @@ public class CartServiceImpl implements CartService {
     private final CartMapper cartMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CartResponseDto getCurrentUserCart() {
         Long currentUserId = userService.getCurrentUser().getId();
         Cart cart = getCartFromDbByUserId(currentUserId);
@@ -37,7 +37,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CartResponseDto getCartByUserId(Long userId) {
         Cart cart = getCartFromDbByUserId(userId);
 

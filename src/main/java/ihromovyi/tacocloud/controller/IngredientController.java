@@ -5,7 +5,7 @@ import ihromovyi.tacocloud.dto.ingredient.IngredientResponseDto;
 import ihromovyi.tacocloud.dto.ingredient.IngredientUpdateDto;
 import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.service.ingredient.IngredientService;
-import java.util.Set;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +42,7 @@ public class IngredientController {
     }
 
     @GetMapping
-    public Set<IngredientResponseDto> getIngredientsByType(
+    public List<IngredientResponseDto> getIngredientsByType(
             @RequestParam(required = false) Ingredient.Type type) {
         return (type != null)
                 ? ingredientService.getAllByType(type)

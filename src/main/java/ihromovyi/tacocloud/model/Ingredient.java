@@ -27,7 +27,7 @@ public class Ingredient {
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type = Type.UNKNOWN;
-    private BigDecimal price = new BigDecimal("0.5");
+    private BigDecimal price = BigDecimal.valueOf(0.5);
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
@@ -47,5 +47,14 @@ public class Ingredient {
         VEGGIE,
         CHEESE,
         SAUCE
+    }
+
+    public void assignPriceByType() {
+        this.price = switch (type) {
+            case VEGGIE, SAUCE -> BigDecimal.ONE;
+            case CHEESE -> BigDecimal.valueOf(1.5);
+            case PROTEIN -> BigDecimal.valueOf(2);
+            default -> BigDecimal.valueOf(0.5);
+        };
     }
 }
