@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -22,11 +23,13 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @NoArgsConstructor
 @Table(name = "carts")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @OneToOne

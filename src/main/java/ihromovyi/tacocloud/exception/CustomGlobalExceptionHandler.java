@@ -58,7 +58,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             ConstraintViolationException.class,
             StripeException.class
     })
-    public ResponseEntity<Object> handleBadRequestException(RuntimeException e) {
+    public ResponseEntity<Object> handleBadRequestException(Exception e) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
     }
 
@@ -73,7 +73,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     private ResponseEntity<Object> buildErrorResponse(HttpStatus status, List<String> errors) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("status", status);
+        body.put("status", status.value());
         body.put("errors", errors);
         return ResponseEntity.status(status).body(body);
     }
