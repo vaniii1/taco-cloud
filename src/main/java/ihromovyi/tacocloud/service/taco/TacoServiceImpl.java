@@ -10,11 +10,7 @@ import ihromovyi.tacocloud.model.Ingredient;
 import ihromovyi.tacocloud.model.Taco;
 import ihromovyi.tacocloud.repository.IngredientRepository;
 import ihromovyi.tacocloud.repository.TacoRepository;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,49 +25,44 @@ public class TacoServiceImpl implements TacoService {
     private final TacoMapper tacoMapper;
 
     @Override
+    @Transactional
     public TacoResponseDto save(TacoRequestDto dto) {
         verifyValidIngredientIds(dto.ingredientIds());
         Taco taco = tacoMapper.toEntity(dto);
-        assignPriceToTaco(taco);
         return tacoMapper.toDto(tacoRepository.save(taco));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TacoResponseDto getById(Long id) {
-        Optional<Taco> optionalTaco = tacoRepository.findById(id);
-        if (optionalTaco.isPresent()) {
-            return tacoMapper.toDto(optionalTaco.get());
-        }
-        throw new TacoNotFoundException("Taco not found with id: " + id);
+        Taco taco = getTacoFromDbById(id);
+        return tacoMapper.toDto(taco);
     }
 
     @Override
-    public Set<TacoResponseDto> getAll() {
+    @Transactional(readOnly = true)
+    public List<TacoResponseDto> getAll() {
         return tacoRepository.findAll()
                 .stream()
                 .map(tacoMapper::toDto)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Override
     @Transactional
     public TacoResponseDto updateById(Long id, TacoUpdateDto dto) {
-        Optional<Taco> optionalTaco = tacoRepository.findById(id);
-        if (optionalTaco.isPresent()) {
-            verifyValidIngredientIds(dto.ingredientIds());
-            Taco updatedTaco = tacoMapper.update(optionalTaco.get(), dto);
-            assignPriceToTaco(updatedTaco);
-            tacoRepository.save(updatedTaco);
-            return tacoMapper.toDto(updatedTaco);
-        }
-        throw new TacoNotFoundException("Taco not found with id: " + id);
+        Taco taco = getTacoFromDbById(id);
+        verifyValidIngredientIds(dto.ingredientIds());
+        Taco updatedTaco = tacoMapper.update(taco, dto);
+        tacoRepository.save(updatedTaco);
+        return tacoMapper.toDto(updatedTaco);
     }
 
     @Override
     public void deleteById(Long id) {
-        tacoRepository.findById(id)
-                .orElseThrow(() ->
-                        new TacoNotFoundException("Taco not found with id: " + id));
+        if (!tacoRepository.existsById(id)) {
+            throw new TacoNotFoundException("Taco not found with id: " + id);
+        }
         tacoRepository.deleteById(id);
     }
 
@@ -92,11 +83,8 @@ public class TacoServiceImpl implements TacoService {
         }
     }
 
-    private void assignPriceToTaco(Taco taco) {
-        BigDecimal price = BigDecimal.ZERO;
-        for (Ingredient ingredient : taco.getIngredients()) {
-            price = price.add(ingredient.getPrice());
-        }
-        taco.setPrice(price);
+    private Taco getTacoFromDbById(Long id) {
+        return tacoRepository.findById(id).orElseThrow(
+                () -> new TacoNotFoundException("Taco not found with id: " + id));
     }
 }

@@ -33,7 +33,7 @@ public class CartController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasAnyAuthority('DEVELOPER', 'MANAGER')")
     @ResponseStatus(HttpStatus.OK)
-    public CartResponseDto getCartById(@PathVariable Long userId) {
+    public CartResponseDto getCartByUserId(@PathVariable Long userId) {
         return cartService.getCartByUserId(userId);
     }
 
@@ -50,7 +50,7 @@ public class CartController {
         return cartService.updateItemQuantityInCart(itemId, dto);
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/remove_item/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public CartResponseDto deleteItemFromCurrentCart(@PathVariable Long itemId) {
         return cartService.removeItemFromCart(itemId);

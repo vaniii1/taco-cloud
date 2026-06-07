@@ -1,6 +1,7 @@
 package ihromovyi.tacocloud.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ihromovyi.tacocloud.model.Order;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,7 +21,10 @@ public record OrderResponseDto(
         @JsonProperty("placed_at")
         LocalDateTime placedAt,
         @JsonProperty("delivered_at")
-        LocalDateTime deliveryAt,
+        LocalDateTime deliveredAt,
+        @JsonProperty("status_changed_at")
+        LocalDateTime statusChangedAt,
+        Order.Status status,
         @JsonProperty("items")
         Set<OrderItemResponseDto> items,
         @JsonProperty("total_price")

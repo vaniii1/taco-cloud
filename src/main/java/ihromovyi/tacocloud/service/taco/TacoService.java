@@ -4,7 +4,7 @@ import ihromovyi.tacocloud.dto.taco.TacoRequestDto;
 import ihromovyi.tacocloud.dto.taco.TacoResponseDto;
 import ihromovyi.tacocloud.dto.taco.TacoUpdateDto;
 import jakarta.validation.Valid;
-import java.util.Set;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public interface TacoService {
 
     TacoResponseDto getById(Long id);
 
-    Set<TacoResponseDto> getAll();
+    List<TacoResponseDto> getAll();
 
     TacoResponseDto updateById(Long id, @Valid TacoUpdateDto dto);
 

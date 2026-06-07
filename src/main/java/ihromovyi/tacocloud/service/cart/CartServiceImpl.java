@@ -54,6 +54,7 @@ public class CartServiceImpl implements CartService {
 
         cart.addItem(taco, requestDto.quantity());
 
+        cartRepository.saveAndFlush(cart);
         return cartMapper.toDto(cart);
     }
 
@@ -71,13 +72,13 @@ public class CartServiceImpl implements CartService {
                         () -> new ForbiddenItemException(
                                 "You are not allowed to update item quantity of other users."));
 
+        Cart cart = cartItem.getCart();
         if (requestDto.quantity() == 0) {
-            cartItem.getCart().removeItem(cartItem);
+            cart.removeItem(cartItem);
         } else {
             cartItem.setQuantity(requestDto.quantity());
         }
-
-        return cartMapper.toDto(cartItem.getCart());
+        return cartMapper.toDto(cart);
     }
 
     @Override
@@ -92,9 +93,9 @@ public class CartServiceImpl implements CartService {
                         () -> new ForbiddenItemException(
                                 "You are not allowed to remove item from other carts."));
 
-        cartItem.getCart().removeItem(cartItem);
-
-        return cartMapper.toDto(cartItem.getCart());
+        Cart cart = cartItem.getCart();
+        cart.removeItem(cartItem);
+        return cartMapper.toDto(cart);
     }
 
     private Cart getCartFromDbByUserId(Long userId) {

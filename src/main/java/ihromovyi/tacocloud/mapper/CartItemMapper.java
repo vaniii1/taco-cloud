@@ -10,5 +10,6 @@ import org.mapstruct.Mapping;
 public interface CartItemMapper {
     @Mapping(target = "tacoId", source = "taco.id")
     @Mapping(target = "tacoName", source = "taco.name")
+    @Mapping(target = "price", expression = "java(cartItem.getSubtotal())")
     CartItemResponseDto toResponse(CartItem cartItem);
 }

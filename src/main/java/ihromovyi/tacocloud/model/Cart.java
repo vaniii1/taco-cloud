@@ -23,13 +23,11 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @NoArgsConstructor
 @Table(name = "carts")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     @OneToOne
@@ -37,6 +35,7 @@ public class Cart {
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
     private List<CartItem> items = new ArrayList<>();
 
     @Column(name = "is_deleted")

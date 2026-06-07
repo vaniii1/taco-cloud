@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -28,6 +29,7 @@ public class CartItem {
     @JoinColumn(name = "taco_id")
     private Taco taco;
     @ManyToOne
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "cart_id")
     private Cart cart;
     private int quantity;

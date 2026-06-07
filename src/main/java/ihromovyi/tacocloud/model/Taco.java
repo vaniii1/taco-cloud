@@ -10,11 +10,13 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -30,14 +32,16 @@ public class Taco {
     private Long id;
     private String name;
     @Column(name = "created_at")
-    private Date createdAt = new Date();
+    private LocalDateTime createdAt = LocalDateTime.now();
     @ManyToMany
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JoinTable(name = "taco_ingredient",
             joinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
     private List<Ingredient> ingredients = new ArrayList<>();
-    private BigDecimal price;
+
     @Column(name = "is_deleted")
     private Boolean isDeleted = Boolean.FALSE;
 
@@ -48,5 +52,13 @@ public class Taco {
 
     public Taco(Long id) {
         this.id = id;
+    }
+
+    public BigDecimal getPrice() {
+        BigDecimal price = BigDecimal.ZERO;
+        for (Ingredient ingredient : this.ingredients) {
+            price = price.add(ingredient.getPrice());
+        }
+        return price;
     }
 }

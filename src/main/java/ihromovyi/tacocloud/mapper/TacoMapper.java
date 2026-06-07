@@ -18,6 +18,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface TacoMapper {
     @Mapping (target = "ingredientIds", source = "ingredients",
             qualifiedByName = "ingredientsToIds")
+    @Mapping(target = "price", expression = "java(taco.getPrice())")
     TacoResponseDto toDto(Taco taco);
 
     @Mapping (target = "ingredients", source = "ingredientIds",

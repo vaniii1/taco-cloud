@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(config = MapperConfig.class)
 public interface OrderItemMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "subtotal", expression = "java(cartItem.getSubtotal())")
     OrderItem toOrderItem(CartItem cartItem);
 

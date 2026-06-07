@@ -3,6 +3,7 @@ package ihromovyi.tacocloud.service.order;
 import ihromovyi.tacocloud.dto.order.OrderRequestDto;
 import ihromovyi.tacocloud.dto.order.OrderResponseDto;
 import ihromovyi.tacocloud.dto.order.OrderStatusDto;
+import ihromovyi.tacocloud.model.Order;
 import jakarta.validation.Valid;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface OrderService {
 
     OrderResponseDto getLastOrder();
 
-    List<OrderResponseDto> getAllByStatus(OrderStatusDto status);
+    List<OrderResponseDto> getAllByStatus(Order.Status status);
 
     List<OrderResponseDto> getAll();
 

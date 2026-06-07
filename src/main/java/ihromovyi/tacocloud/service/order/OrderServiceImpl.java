@@ -9,6 +9,8 @@ import ihromovyi.tacocloud.dto.order.OrderRequestDto;
 import ihromovyi.tacocloud.dto.order.OrderResponseDto;
 import ihromovyi.tacocloud.dto.order.OrderStatusDto;
 import ihromovyi.tacocloud.exception.CartNotFoundException;
+import ihromovyi.tacocloud.exception.EmptyCartException;
+import ihromovyi.tacocloud.exception.InvalidStatusException;
 import ihromovyi.tacocloud.exception.OrderNotFoundException;
 import ihromovyi.tacocloud.mapper.OrderItemMapper;
 import ihromovyi.tacocloud.mapper.OrderMapper;
@@ -47,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
                         "Cart not found with userId: " + currentUser.getId()));
 
         if (cart.getItems().isEmpty()) {
-            throw new IllegalStateException("Cannot create order from empty cart");
+            throw new EmptyCartException("Cannot create order from empty cart");
         }
 
         order.setUser(currentUser);
@@ -63,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderResponseDto getLastOrder() {
         Long currentUserId = userService.getCurrentUser().getId();
         Order order = orderRepository.findLastOrderByUserId(currentUserId).orElseThrow(
@@ -71,16 +74,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> getAllByStatus(OrderStatusDto statusDto) {
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllByStatus(Order.Status status) {
         User currentUser = userService.getCurrentUser();
         List<Order> orders = orderRepository
-                .findAllByUserIdAndStatus(currentUser.getId(), statusDto.status());
+                .findAllByUserIdAndStatus(currentUser.getId(), status);
         return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderResponseDto> getAll() {
         User currentUser = userService.getCurrentUser();
         List<Order> orders = orderRepository.findAllByUserId(currentUser.getId());
@@ -90,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderResponseDto> getAllOrdersByUserId(Long userId) {
         List<Order> orders = orderRepository.findAllByUserId(userId);
         return orders.stream()
@@ -99,11 +105,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderResponseDto updateOrderStatusByOrderId(OrderStatusDto statusDto, Long orderId) {
+    public OrderResponseDto updateOrderStatusByOrderId(
+            OrderStatusDto statusDto, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("Order not found with id: " + orderId));
-        if (!isValidTransition(order.getStatus(), statusDto.status())) {
-            throw new IllegalStateException(
+        Order.Status status = statusDto.toStatus();
+        if (!isValidTransition(order.getStatus(),
+                status)) {
+            throw new InvalidStatusException(
                     "Cannot transition from "
                             + order.getStatus()
                             + " to "
@@ -111,12 +120,15 @@ public class OrderServiceImpl implements OrderService {
             );
 
         }
-        order.setStatus(statusDto.status());
+        if (status.equals(DELIVERED)) {
+            order.setDeliveredAt(LocalDateTime.now());
+        }
+        order.setStatus(status);
         order.setStatusChangedAt(LocalDateTime.now());
         return orderMapper.toDto(order);
     }
 
-    public boolean isValidTransition(Order.Status oldStatus,
+    private boolean isValidTransition(Order.Status oldStatus,
                                      Order.Status newStatus) {
         return switch (oldStatus) {
             case AWAITING_PAYMENT ->
@@ -129,8 +141,7 @@ public class OrderServiceImpl implements OrderService {
 
             case ON_THE_WAY ->
                     newStatus == DELIVERED;
-
-            default -> false;
+            case CANCELED, DELIVERED -> false;
         };
     }
 }

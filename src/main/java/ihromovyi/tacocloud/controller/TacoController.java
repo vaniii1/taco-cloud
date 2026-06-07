@@ -4,7 +4,8 @@ import ihromovyi.tacocloud.dto.taco.TacoRequestDto;
 import ihromovyi.tacocloud.dto.taco.TacoResponseDto;
 import ihromovyi.tacocloud.dto.taco.TacoUpdateDto;
 import ihromovyi.tacocloud.service.taco.TacoService;
-import java.util.Set;
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +36,7 @@ public class TacoController {
     }
 
     @GetMapping
-    public Set<TacoResponseDto> getAllTacos() {
+    public List<TacoResponseDto> getAllTacos() {
         return tacoService.getAll();
     }
 
@@ -43,7 +44,7 @@ public class TacoController {
     @PreAuthorize("hasAuthority('DEVELOPER')")
     public TacoResponseDto updateTacoById(
             @PathVariable Long id,
-            @RequestBody TacoUpdateDto dto) {
+            @RequestBody @Valid TacoUpdateDto dto) {
         return tacoService.updateById(id, dto);
     }
 

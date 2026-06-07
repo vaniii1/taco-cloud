@@ -55,6 +55,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler({
             IllegalArgumentException.class,
             UserAlreadyRegisteredException.class,
+            EmptyCartException.class,
+            InvalidStatusException.class,
             ConstraintViolationException.class,
             StripeException.class
     })
