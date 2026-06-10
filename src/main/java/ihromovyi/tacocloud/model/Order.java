@@ -46,12 +46,6 @@ public class Order {
     private LocalDateTime placedAt = LocalDateTime.now();
     @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;
-    @Column(name = "cc_number")
-    private String ccNumber;
-    @Column(name = "cc_expiration")
-    private String ccExpiration;
-    @Column(name = "cc_cvv")
-    private String ccCvv;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

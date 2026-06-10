@@ -35,8 +35,8 @@ public class Payment {
     private Order order;
     @Column(name = "stripe_customer_id")
     private String stripeCustomerId;
-    @Column(name = "stripe_payment_intent_id")
-    private String stripePaymentIntentId;
+    @Column(name = "stripe_session_id")
+    private String stripeSessionId;
     private BigDecimal amount;
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -54,11 +54,11 @@ public class Payment {
     }
 
     public Payment(User user, Order order, String stripeCustomerId,
-                   String stripePaymentIntentId, BigDecimal amount) {
+                   String stripeSessionId, BigDecimal amount) {
         this.user = user;
         this.order = order;
         this.stripeCustomerId = stripeCustomerId;
-        this.stripePaymentIntentId = stripePaymentIntentId;
+        this.stripeSessionId = stripeSessionId;
         this.amount = amount;
     }
 }
