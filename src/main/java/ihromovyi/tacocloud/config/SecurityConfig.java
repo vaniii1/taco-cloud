@@ -34,7 +34,8 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/",
                                         "/pictures/**",
-                                        "/auth/**"
+                                        "/auth/**",
+                                        "/webhook/stripe"
                                 )
                                 .permitAll()
                                 .anyRequest()

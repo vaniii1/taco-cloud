@@ -76,6 +76,6 @@ public class MyStripeClient {
                     )
                     .build();
 
-        return Session.create(params);
+        return client.v1().checkout().sessions().create(params);
     }
 }

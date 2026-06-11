@@ -470,7 +470,7 @@ databaseChangeLog:
                   name: stripe_customer_id
                   type: VARCHAR(255)
               - column:
-                  name: stripe_payment_intent_id
+                  name: stripe_session_id
                   type: VARCHAR(255)
               - column:
                   name: amount

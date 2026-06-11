@@ -49,16 +49,7 @@ public class Payment {
 
     public enum Status {
         PENDING,
-        CONFIRMED,
-        DECLINED
-    }
-
-    public Payment(User user, Order order, String stripeCustomerId,
-                   String stripeSessionId, BigDecimal amount) {
-        this.user = user;
-        this.order = order;
-        this.stripeCustomerId = stripeCustomerId;
-        this.stripeSessionId = stripeSessionId;
-        this.amount = amount;
+        COMPLETED,
+        FAILED
     }
 }
