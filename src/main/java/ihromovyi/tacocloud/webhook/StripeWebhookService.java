@@ -1,6 +1,8 @@
 package ihromovyi.tacocloud.webhook;
 
-public interface StripeWebhookService {
+import com.stripe.exception.EventDataObjectDeserializationException;
 
-    void handleEvent(String payload, String signature);
+public interface StripeWebhookService {
+    void handleEvent(String payload, String signature)
+            throws EventDataObjectDeserializationException;
 }

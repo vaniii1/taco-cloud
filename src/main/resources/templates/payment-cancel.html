@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Cancelled</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; }
+        .card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 32px; }
+        .status { color: #c62828; font-size: 1.4rem; font-weight: bold; margin-bottom: 24px; }
+        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .label { color: #666; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="status">✗ Payment Cancelled</div>
+    <div class="row">
+        <span class="label">Order ID</span>
+        <span th:text="${payment.orderId()}"></span>
+    </div>
+    <div class="row">
+        <span class="label">Amount</span>
+        <span th:text="'$' + ${payment.amount()}"></span>
+    </div>
+    <div class="row">
+        <span class="label">Status</span>
+        <span th:text="${payment.status()}"></span>
+    </div>
+    <div class="row">
+        <span class="label">Date</span>
+        <span th:text="${#temporals.format(payment.createdAt(), 'dd MMM yyyy HH:mm')}"></span>
+    </div>
+</div>
+</body>
+</html>

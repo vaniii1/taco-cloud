@@ -4,6 +4,7 @@ import com.stripe.exception.StripeException;
 import ihromovyi.tacocloud.dto.order.CheckoutResponse;
 import ihromovyi.tacocloud.dto.order.OrderRequestDto;
 import ihromovyi.tacocloud.service.order.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CheckoutResponse placeOrder(
-            @RequestBody OrderRequestDto dto) throws StripeException {
+            @RequestBody @Valid OrderRequestDto dto) throws StripeException {
         return orderService.createOrder(dto);
     }
 }

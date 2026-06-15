@@ -35,7 +35,8 @@ public class SecurityConfig {
                                         "/",
                                         "/pictures/**",
                                         "/auth/**",
-                                        "/webhook/stripe"
+                                        "/webhook/stripe",
+                                        "/payments/**"
                                 )
                                 .permitAll()
                                 .anyRequest()

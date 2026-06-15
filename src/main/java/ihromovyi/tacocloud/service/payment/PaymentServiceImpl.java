@@ -3,7 +3,10 @@ package ihromovyi.tacocloud.service.payment;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import ihromovyi.tacocloud.client.MyStripeClient;
+import ihromovyi.tacocloud.dto.payment.PaymentResponseDto;
 import ihromovyi.tacocloud.dto.payment.PaymentSession;
+import ihromovyi.tacocloud.exception.PaymentNotFoundException;
+import ihromovyi.tacocloud.mapper.PaymentMapper;
 import ihromovyi.tacocloud.model.Order;
 import ihromovyi.tacocloud.model.Payment;
 import ihromovyi.tacocloud.model.User;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class PaymentServiceImpl implements PaymentService {
     private final MyStripeClient stripeClient;
     private final PaymentRepository paymentRepository;
+    private final PaymentMapper paymentMapper;
 
     @Override
     public PaymentSession createCheckoutSessionForOrder(Order order, User user)
@@ -37,5 +41,12 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
 
         return new PaymentSession(session.getUrl());
+    }
+
+    @Override
+    public PaymentResponseDto getPaymentByOrderId(Long orderId) {
+        Payment payment = paymentRepository.findById(orderId).orElseThrow(
+                () -> new PaymentNotFoundException("Payment not found with orderId: " + orderId));
+        return paymentMapper.toDto(payment);
     }
 }

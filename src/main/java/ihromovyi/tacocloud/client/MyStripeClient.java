@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyStripeClient {
     private static final String CURRENCY_CODE = "usd";
-    private static final String PAYMENT_URL = "http://taco_cloud_api/payment/";
+    private static final String PAYMENT_URL = "http://localhost:8080/taco_cloud_api/payments/";
 
     @Value("${stripe.apiKey}")
     private String stripeApiKey;

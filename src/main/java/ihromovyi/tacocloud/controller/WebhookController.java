@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.controller;
 
+import com.stripe.exception.EventDataObjectDeserializationException;
 import ihromovyi.tacocloud.webhook.StripeWebhookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,8 @@ public class WebhookController {
     @PostMapping("/stripe")
     public ResponseEntity<String> stripeWebhook(
             @RequestBody String payload,
-            @RequestHeader("Stripe-Signature") String signature) {
+            @RequestHeader("Stripe-Signature") String signature)
+            throws EventDataObjectDeserializationException {
         stripeWebhookService.handleEvent(payload, signature);
         return ResponseEntity.ok("Success");
     }

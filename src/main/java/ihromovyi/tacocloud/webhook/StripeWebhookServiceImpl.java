@@ -1,5 +1,6 @@
 package ihromovyi.tacocloud.webhook;
 
+import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
@@ -28,7 +29,8 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
 
     @Override
     @Transactional
-    public void handleEvent(String payload, String signature) {
+    public void handleEvent(String payload, String signature)
+            throws EventDataObjectDeserializationException {
         Event event;
 
         try {
@@ -44,15 +46,14 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
         switch (event.getType()) {
             case "checkout.session.completed" -> handleSessionCompleted(event);
             case "checkout.session.expired" -> handleSessionExpired(event);
-            default -> throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid Stripe event");
+            default -> { }
         }
     }
 
-    private void handleSessionExpired(Event event) {
+    private void handleSessionExpired(Event event)
+            throws EventDataObjectDeserializationException {
         Session session = (Session) event.getDataObjectDeserializer()
-                .getObject()
-                .orElseThrow();
+                .deserializeUnsafe();
 
         Payment payment = paymentRepository.findByStripeSessionId(session.getId()).orElseThrow(
                 () -> new PaymentNotFoundException(
@@ -67,10 +68,10 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
         orderRepository.save(order);
     }
 
-    private void handleSessionCompleted(Event event) {
+    private void handleSessionCompleted(Event event)
+            throws EventDataObjectDeserializationException {
         Session session = (Session) event.getDataObjectDeserializer()
-                .getObject()
-                .orElseThrow();
+                .deserializeUnsafe();
 
         Payment payment = paymentRepository.findByStripeSessionId(session.getId()).orElseThrow(
                 () -> new PaymentNotFoundException(

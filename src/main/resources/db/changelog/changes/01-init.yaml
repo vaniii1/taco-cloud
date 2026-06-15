@@ -327,7 +327,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: user_id
                   type: BIGINT
@@ -363,7 +362,6 @@ databaseChangeLog:
                   name: placed_at
                   type: TIMESTAMP
                   defaultValueComputed: now()
-
               - column:
                   name: delivered_at
                   type: TIMESTAMP
