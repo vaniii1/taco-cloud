@@ -1,21 +1,21 @@
-package ihromovyi.tacocloud.dto.order;
+package ihromovyi.tacocloud.dto.payment;
 
 import ihromovyi.tacocloud.exception.InvalidStatusException;
-import ihromovyi.tacocloud.model.Order;
+import ihromovyi.tacocloud.model.Payment;
 import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
 
-public record OrderStatusDto(
+public record PaymentStatusDto(
         @NotNull
         String status
 ) {
-    public Order.Status toStatus() {
+    public Payment.Status toStatus() {
         try {
-            return Order.Status.valueOf(status.toUpperCase());
+            return Payment.Status.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new InvalidStatusException(
                     "Invalid status: '" + status + "'. Valid values: "
-                            + Arrays.toString(Order.Status.values()));
+                            + Arrays.toString(Payment.Status.values()));
         }
     }
 }

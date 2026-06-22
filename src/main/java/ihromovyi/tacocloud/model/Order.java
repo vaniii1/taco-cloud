@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -63,10 +65,22 @@ public class Order {
 
     public enum Status {
         AWAITING_PAYMENT,
-        DELIVERED,
         PREPARING,
         ON_THE_WAY,
-        CANCELED
+        DELIVERED,
+        CANCELED;
+
+        private static final Map<Status, Set<Status>> ALLOWED_TRANSITIONS = Map.of(
+                AWAITING_PAYMENT, Set.of(PREPARING, CANCELED),
+                PREPARING, Set.of(ON_THE_WAY, CANCELED),
+                ON_THE_WAY, Set.of(DELIVERED, CANCELED),
+                DELIVERED, Set.of(),
+                CANCELED, Set.of()
+        );
+
+        public boolean canTransitionTo(Status next) {
+            return ALLOWED_TRANSITIONS.get(this).contains(next);
+        }
     }
 
     public void addItem(OrderItem item) {

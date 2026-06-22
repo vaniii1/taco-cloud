@@ -40,7 +40,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler({
             IngredientNotFoundException.class,
             TacoNotFoundException.class,
-            TacoOrderNotFoundException.class,
             EntityNotFoundException.class,
             UserNotFoundException.class,
             PaymentNotFoundException.class,

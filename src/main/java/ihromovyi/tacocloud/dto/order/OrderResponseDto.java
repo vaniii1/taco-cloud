@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ihromovyi.tacocloud.model.Order;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 public record OrderResponseDto(
         Long id,
@@ -26,7 +26,7 @@ public record OrderResponseDto(
         LocalDateTime statusChangedAt,
         Order.Status status,
         @JsonProperty("items")
-        Set<OrderItemResponseDto> items,
+        List<OrderItemResponseDto> items,
         @JsonProperty("total_price")
         BigDecimal totalPrice) {
 }
