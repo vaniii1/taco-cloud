@@ -1,6 +1,7 @@
 package ihromovyi.tacocloud.service.order;
 
 import com.stripe.exception.StripeException;
+import ihromovyi.tacocloud.dto.event.OrderStatusChangedEvent;
 import ihromovyi.tacocloud.dto.order.CheckoutResponse;
 import ihromovyi.tacocloud.dto.order.OrderRequestDto;
 import ihromovyi.tacocloud.dto.order.OrderResponseDto;
@@ -10,6 +11,7 @@ import ihromovyi.tacocloud.exception.CartNotFoundException;
 import ihromovyi.tacocloud.exception.EmptyCartException;
 import ihromovyi.tacocloud.exception.InvalidStatusException;
 import ihromovyi.tacocloud.exception.OrderNotFoundException;
+import ihromovyi.tacocloud.exception.UserNotFoundException;
 import ihromovyi.tacocloud.mapper.OrderItemMapper;
 import ihromovyi.tacocloud.mapper.OrderMapper;
 import ihromovyi.tacocloud.model.Cart;
@@ -22,12 +24,14 @@ import ihromovyi.tacocloud.service.user.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    private final ApplicationEventPublisher eventPublisher;
     private final UserService userService;
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
@@ -101,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrdersByUserId(Long userId) {
+        verifyUserExists(userId);
         return orderRepository.findAllByUserId(userId)
                 .stream()
                 .map(orderMapper::toDto)
@@ -110,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrdersByUserIdAndStatus(Long userId, OrderStatusDto status) {
+        verifyUserExists(userId);
         return orderRepository.findAllByUserIdAndStatus(userId, status.toStatus())
                 .stream()
                 .map(orderMapper::toDto)
@@ -124,7 +130,11 @@ public class OrderServiceImpl implements OrderService {
         verifyStatus(order.getStatus(), newStatus);
         order.setStatus(newStatus);
         order.setStatusChangedAt(LocalDateTime.now());
-        return orderMapper.toDto(order);
+        OrderResponseDto orderDto = orderMapper.toDto(order);
+        eventPublisher.publishEvent(
+                new OrderStatusChangedEvent(order.getUser().getEmail(), orderDto)
+        );
+        return orderDto;
     }
 
     @Override
@@ -147,4 +157,9 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    private void verifyUserExists(Long userId) {
+        if (!orderRepository.existsById(userId)) {
+            throw new UserNotFoundException("User not found, userId: " + userId);
+        }
+    }
 }

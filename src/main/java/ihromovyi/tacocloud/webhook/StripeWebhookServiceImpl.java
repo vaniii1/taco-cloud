@@ -5,7 +5,10 @@ import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
+import ihromovyi.tacocloud.dto.event.OrderCreatedEvent;
+import ihromovyi.tacocloud.dto.event.OrderStatusChangedEvent;
 import ihromovyi.tacocloud.exception.PaymentNotFoundException;
+import ihromovyi.tacocloud.mapper.OrderMapper;
 import ihromovyi.tacocloud.model.Order;
 import ihromovyi.tacocloud.model.Payment;
 import ihromovyi.tacocloud.repository.OrderRepository;
@@ -13,6 +16,7 @@ import ihromovyi.tacocloud.repository.PaymentRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +25,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 @RequiredArgsConstructor
 public class StripeWebhookServiceImpl implements StripeWebhookService {
+    private final ApplicationEventPublisher eventPublisher;
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final OrderMapper orderMapper;
 
     @Value("${stripe.webhook.secret}")
     private String stripeWebhookSecret;
@@ -66,6 +72,8 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
         order.setStatus(Order.Status.CANCELED);
         order.setStatusChangedAt(LocalDateTime.now());
         orderRepository.save(order);
+        eventPublisher.publishEvent(
+                new OrderStatusChangedEvent(order.getUser().getEmail(), orderMapper.toDto(order)));
     }
 
     private void handleSessionCompleted(Event event)
@@ -84,5 +92,7 @@ public class StripeWebhookServiceImpl implements StripeWebhookService {
         order.setStatus(Order.Status.PREPARING);
         order.setStatusChangedAt(LocalDateTime.now());
         orderRepository.save(order);
+        eventPublisher.publishEvent(
+                new OrderCreatedEvent(order.getUser().getEmail(), orderMapper.toDto(order)));
     }
 }
